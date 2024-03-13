@@ -22,4 +22,4 @@
 
 ## Презентация
 * Файл презентации [(pptx)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pptx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pdf)
-* Видео презентации [(mp4)](https://drive.google.com/file/d/1IURGl1AyIPHWT1BPiaZO87-Ok8Van2IW/view?usp=sharing)
+* Видео презентации [(mov)](https://drive.google.com/file/d/1IURGl1AyIPHWT1BPiaZO87-Ok8Van2IW/view?usp=sharing)
