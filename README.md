@@ -13,11 +13,13 @@
 ## Сервисы
 * [Miro](https://miro.com/app/board/uXjVNtOOQng=/?share_link_id=356789673225)
 * [Trello](https://trello.com/b/2fJrJrV9/tasks)
+* [Figma](https://www.figma.com/file/3AqyAoOnwmc4WDSCV06Cx2/Stride?type=design&node-id=0%3A1&mode=design&t=HycYFbVYKflqyUJv-1)
 
 ## Документация
 * Техническое задание [(docx)]() [(pdf)]()
 * Сопроводительное письмо [(docx)]() [(pdf)]()
+* Перечень задач [(pdf)]()
 
 ## Презентация
 * Файл презентации [(pptx)]() [(pdf)]()
-* Видео презентации [(mp4)]()
+* Видео презентации [(mp4)](https://drive.google.com/file/d/1IURGl1AyIPHWT1BPiaZO87-Ok8Van2IW/view?usp=sharing)
