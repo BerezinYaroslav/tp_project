@@ -1,0 +1,6 @@
+#response-container {
+    border: 2px solid #000; /* Ширина рамки 2px и цвет черный (#000) */
+    padding: 10px; /* Отступ внутри контейнера */
+    margin-top: 20px; /* Отступ сверху */
+    background-color: #f0f0f0; /* Цвет фона */
+}
