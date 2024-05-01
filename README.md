@@ -19,6 +19,7 @@
 * Техническое задание [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/TP_TZ.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/TP_TZ.pdf)
 * Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo.pdf)
 * Перечень задач [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87.pdf)
+* Курсовая [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовая.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовая.pdf)
 
 ## Презентация
 * Файл презентации [(pptx)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pptx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pdf)
