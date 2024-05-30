@@ -1,0 +1,41 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: 15px;
+  position: sticky;
+  width: 100%;
+}
+
+.header__logo {
+  margin: 0;
+  font-size: 40px;
+}
+
+.header__title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.header__input {
+  min-width: 500px;
+  padding: 14px 30px;
+  box-sizing: border-box;
+  border-radius: 18px;
+  background-color: rgba(239, 239, 239, 0.66);
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+
+.header__input:focus {
+  border: 2px solid #FABB18;
+  outline: none;
+}
+
+.header__profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
