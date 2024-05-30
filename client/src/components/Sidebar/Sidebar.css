@@ -16,6 +16,8 @@
   box-sizing: border-box;
   padding: 10px 15px;
   border-radius: 10px;
+  text-decoration: none;
+  color: #000;
 }
 
 .sidebar__item:last-child {
@@ -23,6 +25,6 @@
 }
 
 .sidebar__item_active {
-  background-color: #000;
+  background-color: #FABB18;
   color: #fff;
 }

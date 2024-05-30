@@ -1,18 +1,21 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 function Sidebar() {
+  const location = useLocation();
+
   return (
     <div className="sidebar">
-      <div className="sidebar__item sidebar__item_active">
+      <Link to="/" className={location.pathname === '/' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
         <svg width="34" height="26" viewBox="0 0 34 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="14.5786" height="6.5" rx="1.5" fill="#FABB18" />
-          <rect x="18.7439" y="19.5" width="14.5786" height="6.5" rx="1.5" fill="#FABB18" />
-          <rect y="9.75" width="14.5786" height="16.25" rx="1.5" fill="white" />
-          <rect x="18.7439" width="14.5786" height="16.25" rx="1.5" fill="white" />
+          <rect width="14.5786" height="6.5" rx="1.5" fill="black" />
+          <rect x="18.7439" y="19.5" width="14.5786" height="6.5" rx="1.5" fill="black" />
+          <rect y="9.75" width="14.5786" height="16.25" rx="1.5" fill="#DADADA" />
+          <rect x="18.7439" width="14.5786" height="16.25" rx="1.5" fill="#DADADA" />
         </svg>
         Tasks
-      </div>
-      <div className="sidebar__item">
+      </Link>
+      <Link to="/" className="sidebar__item">
         <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -28,8 +31,8 @@ function Sidebar() {
           />
         </svg>
         Analytic
-      </div>
-      <div className="sidebar__item">
+      </Link>
+      <Link to="/calendar" className={location.pathname === '/calendar' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
         <svg width="33" height="34" viewBox="0 0 33 34" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -46,7 +49,7 @@ function Sidebar() {
           />
         </svg>
         Calendar
-      </div>
+      </Link>
       <div className="sidebar__item">
         <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
