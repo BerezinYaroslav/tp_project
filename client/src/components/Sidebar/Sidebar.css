@@ -1,0 +1,28 @@
+.sidebar {
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 30px 15px 0 0;
+}
+
+.sidebar__item {
+  font-size: 24px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.sidebar__item:last-child {
+  gap: 20px;
+}
+
+.sidebar__item_active {
+  background-color: #000;
+  color: #fff;
+}
