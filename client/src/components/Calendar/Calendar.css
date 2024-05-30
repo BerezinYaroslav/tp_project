@@ -1,0 +1,8 @@
+.calendar {
+  width: 100%;
+  height: 800px;
+}
+
+.calendar__item {
+  width: 100%;
+}
