@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import ru.kts_team.back.task.Task;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -35,4 +38,7 @@ public class User {
     @Size(max = 50)
     @NotEmpty
     private String password;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Task> tasks;
 }

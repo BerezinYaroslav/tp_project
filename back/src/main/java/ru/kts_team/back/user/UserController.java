@@ -28,7 +28,7 @@ public class UserController {
         return service.getUserById(id);
     }
 
-    @PatchMapping
+    @PutMapping
     public void updateUser(@Valid @RequestBody User user) {
         service.updateUser(user);
     }

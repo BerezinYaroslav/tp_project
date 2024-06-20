@@ -28,7 +28,7 @@ public class TaskController {
         return service.getTaskById(id);
     }
 
-    @PatchMapping
+    @PutMapping
     public void updateTask(@Valid @RequestBody Task task) {
         service.updateTask(task);
     }
