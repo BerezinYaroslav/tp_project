@@ -1,0 +1,78 @@
+.lists-page {
+  width: 100%;
+  background-color: #F9F9F9;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 30px 20px 20px 20px;
+  gap: 15px;
+  display: flex;
+}
+
+.main-content {
+  width: 100%;
+}
+
+.lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-list-button {
+  width: 60px;
+  height: 60px;
+  right: 0;
+  top: 0;
+  font-size: 60px;
+  line-height: 40px;
+  padding: 0;
+  background-color: #FABB18;
+  border: none;
+  border-radius: 15px;
+}
+
+.lists-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.list-item {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-item span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Buttons */
+.delete-list-button {
+  background-color: #fAbb18;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-list-button {
+  background-color: #ccc; /* Light Grey for delete */
+  font-size: 0.8rem;
+  padding: 6px 10px;
+}
+
+/* Options Menu (Three Dots) */
+.list-item .options {
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+}

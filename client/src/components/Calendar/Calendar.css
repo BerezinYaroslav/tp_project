@@ -1,8 +1,46 @@
 .calendar {
   width: 100%;
-  height: 800px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.calendar__item {
-  width: 100%;
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-week {
+  display: contents;
+}
+
+.calendar-day {
+  border: 1px solid #ccc;
+  padding: 5px;
+  min-height: 100px;
+}
+
+.task-item {
+  background-color: #f0f0f0;
+  padding: 2px 5px;
+  margin-top: 5px;
+  border-radius: 3px;
+}
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.weekday {
+  padding: 5px;
 }
