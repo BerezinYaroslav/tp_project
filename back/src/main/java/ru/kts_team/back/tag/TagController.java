@@ -28,7 +28,7 @@ public class TagController {
         return service.getTagById(id);
     }
 
-    @PatchMapping
+    @PutMapping
     public void updateTag(@Valid @RequestBody Tag tag) {
         service.updateTag(tag);
     }
