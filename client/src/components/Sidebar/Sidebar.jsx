@@ -15,7 +15,7 @@ function Sidebar() {
         </svg>
         Tasks
       </Link>
-      <Link to="/" className="sidebar__item">
+      <Link to="/analytics" className={location.pathname === '/analytics' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
         <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -50,7 +50,7 @@ function Sidebar() {
         </svg>
         Calendar
       </Link>
-      <div className="sidebar__item">
+      <Link to="/lists" className={location.pathname === '/lists' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
         <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             opacity="0.3"
@@ -69,7 +69,7 @@ function Sidebar() {
           <rect opacity="0.3" x="4.875" y="17.7964" width="14.625" height="2.73791" rx="1.36896" fill="black" />
         </svg>
         Lists
-      </div>
+      </Link>
     </div>
   );
 }
