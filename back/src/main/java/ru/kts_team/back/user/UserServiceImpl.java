@@ -13,9 +13,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public void addUser(User user) {
+    public User addUser(User user) {
         log.info("Add a user");
-        repository.save(user);
+        return repository.save(user);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         log.info("Update a user");
-        repository.save(user);
+        return repository.save(user);
     }
 
     @Override

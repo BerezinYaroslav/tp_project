@@ -15,7 +15,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository repository;
 
     @Override
-    public void addTask(Task task) {
+    public Task addTask(Task task) {
         log.info("Add a task");
 
         if (task.getCreationDate() == null) {
@@ -25,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
             task.setIsDone(false);
         }
 
-        repository.save(task);
+        return repository.save(task);
     }
 
     @Override
@@ -42,9 +42,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public Task updateTask(Task task) {
         log.info("Update a task");
-        repository.save(task);
+        return repository.save(task);
     }
 
     @Override
