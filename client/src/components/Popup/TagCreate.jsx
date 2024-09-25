@@ -16,7 +16,7 @@ function TagCreate({ onTagCreated, onClose }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        onTagCreated(data); // Pass the new tag back to the parent
+        onTagCreated(data); // Pass the new taskTag back to the parent
         onClose(); // Close the TagCreate popup
       })
       .catch((error) => {
@@ -25,7 +25,7 @@ function TagCreate({ onTagCreated, onClose }) {
   };
 
   return (
-    <div className="tag-create-popup">
+    <div className="taskTag-create-popup">
       <form onSubmit={handleSubmit}>
         <label>
           Tag Name:

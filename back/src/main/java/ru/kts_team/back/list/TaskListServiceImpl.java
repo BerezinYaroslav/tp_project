@@ -13,9 +13,9 @@ public class TaskListServiceImpl implements TaskListService {
     private final TaskListRepository repository;
 
     @Override
-    public void addList(TaskList taskList) {
+    public TaskList addList(TaskList taskList) {
         log.info("Add a list");
-        repository.save(taskList);
+        return repository.save(taskList);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class TaskListServiceImpl implements TaskListService {
     }
 
     @Override
-    public void updateList(TaskList taskList) {
+    public TaskList updateList(TaskList taskList) {
         log.info("Update a list");
-        repository.save(taskList);
+        return repository.save(taskList);
     }
 
     @Override

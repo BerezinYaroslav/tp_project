@@ -3,13 +3,13 @@ package ru.kts_team.back.task;
 import java.util.List;
 
 public interface TaskService {
-    void addTask(Task task);
+    Task addTask(Task task);
 
     List<Task> getTasks();
 
     Task getTaskById(Long id);
 
-    void updateTask(Task task);
+    Task updateTask(Task task);
 
     void deleteTasks();
 
