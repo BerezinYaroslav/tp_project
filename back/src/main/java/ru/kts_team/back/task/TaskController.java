@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Tag(name = "tasks", description = "Controller for Tasks")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin("*")
 public class TaskController {
     private final TaskService service;
 
