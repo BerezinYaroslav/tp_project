@@ -1,0 +1,27 @@
+version: '3.2'
+services:
+  # DB
+  postgres:
+    restart: always
+    container_name: stride-pg
+    image: postgres:latest
+    ports:
+      - '5433:5432'
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=stridedb
+
+  # BACK
+  back:
+    build: ./back/
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/stridedb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - postgres
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
