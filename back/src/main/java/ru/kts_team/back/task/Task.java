@@ -31,6 +31,11 @@ public class Task {
     @Size(max = 50, min = 1)
     private String name;
 
+    @Column(name = "description")
+    @NotEmpty
+    @Size(min = 1)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User owner;

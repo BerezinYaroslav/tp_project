@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Tag(name = "users", description = "Controller for Users")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin("*")
 public class UserController {
     private final UserService service;
 
