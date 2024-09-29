@@ -1,0 +1,117 @@
+/* General task list styling */
+.tasks {
+  width: 100%;
+  background-color: #F9F9F9;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 30px 20px 20px 20px;
+  gap: 15px;
+}
+
+.tasks__header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.tasks__create-button {
+  width: 60px;
+  height: 60px;
+  right: 0;
+  top: 0;
+  font-size: 60px;
+  line-height: 40px;
+  padding: 0;
+  background-color: #FABB18;
+  border: none;
+  border-radius: 15px;
+}
+
+.tasks__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tasks__item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative;
+  justify-content: space-between;
+}
+
+.tasks__item-details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tasks__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.tasks__item-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.tasks__menu-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Inline information (finish date, list, tags) */
+.tasks__item-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.tasks__item-date {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.tasks__item-list {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.tasks__tags {
+  display: flex;
+  gap: 5px;
+}
+
+.tasks__tag {
+  background-color: #f1c40f;
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.tasks__no-tags {
+  font-size: 12px;
+  color: #95a5a6;
+}
+
+.tasks__item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tasks__create-button:hover {
+  background-color: #e1b307;
+}

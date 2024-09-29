@@ -1,20 +1,26 @@
-.calendar {
+.calendar-page {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  background-color: #F9F9F9;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 0px 20px 20px 20px;
+  gap: 15px;
 }
 
 .calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  text-align: left;
+}
+
+.calendar-header h2 {
+  font-size: 40px;
+  font-weight: bold;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
+  margin-top: 10px;
 }
 
 .calendar-week {
@@ -22,25 +28,74 @@
 }
 
 .calendar-day {
+  border-radius: 10px;
   border: 1px solid #ccc;
   padding: 5px;
   min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.current-day {
+  border: 2px solid black;
 }
 
 .task-item {
-  background-color: #f0f0f0;
-  padding: 2px 5px;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
   margin-top: 5px;
-  border-radius: 3px;
-}
-.weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  font-weight: bold;
+  font-size: 12px;
+  width: 90%;
   text-align: center;
 }
 
+/* Weekdays styling */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  text-align: center;
+  background-color: #f1c40f;
+  color: black;
+  border-radius: 10px;
+}
+
 .weekday {
+  padding: 10px 0;
+}
+
+/* Calendar Day Styling */
+.calendar-day {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  position: relative;
+}
+
+/* Highlight today's date */
+.current-day {
+  border: 2px solid #000;
+}
+
+/* Task styling */
+.task-item {
+  background-color: #f1c40f; /* Default task color */
   padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+  text-align: center;
+  font-size: 12px;
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-item:hover {
+  filter: brightness(90%);
 }

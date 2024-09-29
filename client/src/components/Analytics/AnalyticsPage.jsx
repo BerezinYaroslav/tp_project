@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Pie, Bar } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -13,7 +13,7 @@ function AnalyticsPage() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('http://localhost:8080/tasks');
+      const response = await fetch(`http://stride.ddns.net:8080/tasks/parentIdIsNull?parentId=null`);
       const data = await response.json();
       setTasks(data);
     } catch (error) {
@@ -21,68 +21,94 @@ function AnalyticsPage() {
     }
   };
 
-  const calculateAnalyticsData = () => {
-    const today = new Date();
-    let completed = 0;
-    let missed = 0;
-    let toBeCompleted = 0;
+  // Helper to get the start and end dates of the current week (Monday to Sunday)
+  const getCurrentWeekRange = () => {
+    const currentDate = new Date();
+    const firstDayOfWeek = currentDate.getDate() - currentDate.getDay() + 1; // Monday
+    const lastDayOfWeek = firstDayOfWeek + 6; // Sunday
 
-    tasks.forEach(task => {
-      const finishDate = new Date(task.finish_date);
+    const startOfWeek = new Date(currentDate.setDate(firstDayOfWeek));
+    const endOfWeek = new Date(currentDate.setDate(lastDayOfWeek));
 
-      if (task.is_done) {
-        completed++;
-      } else if (finishDate < today) {
-        missed++;
-      } else {
-        toBeCompleted++;
+    return { startOfWeek, endOfWeek };
+  };
+
+  // Get the current week range
+  const { startOfWeek, endOfWeek } = getCurrentWeekRange();
+
+  // Calculate tasks completed per day for the current week
+  const getTasksPerDay = () => {
+    const dayCounts = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+    const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    tasks.forEach((task) => {
+      const finishDate = new Date(task.finishDate);
+
+      // Only count tasks within the current week range
+      if (finishDate >= startOfWeek && finishDate <= endOfWeek && task.isDone) {
+        const dayName = dayLabels[finishDate.getDay() === 0 ? 6 : finishDate.getDay() - 1]; // Get day of the week (adjust for Sunday as 0)
+        dayCounts[dayName]++;
       }
     });
 
-    return { completed, missed, toBeCompleted };
+    return dayCounts;
   };
 
-  const analyticsData = calculateAnalyticsData();
-
-  const pieChartData = {
-    labels: ['Completed', 'Missed', 'To Be Completed'],
+  // Prepare data for the Bar chart (tasks completed per day in the current week)
+  const tasksPerDay = getTasksPerDay();
+  const barChartData = {
+    labels: Object.keys(tasksPerDay),
     datasets: [
       {
-        data: [analyticsData.completed, analyticsData.missed, analyticsData.toBeCompleted],
-        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+        label: 'Tasks Completed',
+        data: Object.values(tasksPerDay),
+        backgroundColor: ['#F7B500', '#F7B500', '#F7B500', '#F7B500', '#F7B500', '#F7B500', '#F7B500'],
       },
     ],
   };
 
-  useEffect(() => {
-    return () => {
-      // Cleanup chart instance if it exists
-      const chartInstance = Chart.getChart('pie-chart');
-      if (chartInstance) {
-        chartInstance.destroy();
+  // Calculate the proportion of completed vs unfinished tasks for Pie chart
+  const getCompletionProportion = () => {
+    let completed = 0;
+    let unfinished = 0;
+
+    tasks.forEach((task) => {
+      if (task.isDone) {
+        completed++;
+      } else {
+        unfinished++;
       }
-    };
-  }, []);
+    });
+
+    return { completed, unfinished };
+  };
+
+  const { completed, unfinished } = getCompletionProportion();
+  const pieChartData = {
+    labels: ['Completed Tasks', 'Unfinished Tasks'],
+    datasets: [
+      {
+        data: [completed, unfinished],
+        backgroundColor: ['#77DD77', '#F7B500'], // Blue for completed, Red for unfinished
+        hoverBackgroundColor: ['#77DD77', '#F7B500'],
+      },
+    ],
+  };
 
   return (
     <div className="analytics-page">
-      <h1>Task Analytics</h1>
-      <div className="chart-container">
-        <Pie data={pieChartData} id="pie-chart" />
+      {/* Left section for Bar Chart */}
+      <div className="analytics-left">
+        <h2>Completed tasks</h2>
+        <p>{`${startOfWeek.toLocaleDateString()} - ${endOfWeek.toLocaleDateString()}`}</p> {/* Display current week range */}
+        <Bar data={barChartData} />
       </div>
-      <div className="data-container">
-        <div className="data-item">
-          <h3>Completed</h3>
-          <p>{analyticsData.completed}</p>
-        </div>
-        <div className="data-item">
-          <h3>Missed</h3>
-          <p>{analyticsData.missed}</p>
-        </div>
-        <div className="data-item">
-          <h3>To Be Completed</h3>
-          <p>{analyticsData.toBeCompleted}</p>
+
+      {/* Right section for Pie Chart */}
+      <div className="analytics-right">
+        <h2>Task Completion</h2>
+        <div className="chart-container">
+          <Pie data={pieChartData} />
         </div>
       </div>
     </div>

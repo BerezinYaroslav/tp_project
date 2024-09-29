@@ -1,8 +1,5 @@
-import React, {
-  useState, useEffect, useCallback, useMemo,
-} from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import TaskCreate from '../Popup/TaskCreate.jsx';
-import TaskMenu from '../Popup/TaskMenu.jsx';
 import TaskView from '../Popup/TaskView.jsx';
 
 function Main({ ownerId, search }) {
@@ -10,8 +7,6 @@ function Main({ ownerId, search }) {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskView, setShowTaskView] = useState(false);
-  const [showTaskMenu, setShowTaskMenu] = useState(false);
-  const [taskMenuAction, setTaskMenuAction] = useState(null); // 'edit', 'delete', or null
 
   const today = useMemo(() => new Date(), []);
   const tomorrow = useMemo(() => new Date(today.getTime() + 24 * 60 * 60 * 1000), [today]);
@@ -28,32 +23,73 @@ function Main({ ownerId, search }) {
   };
 
   const fetchTasks = useCallback(() => {
-    fetch(`http://localhost:8080/tasks?owner_id=${ownerId}&finish_date=${today.toISOString().split('T')[0]}&finish_date=${tomorrow.toISOString().split('T')[0]}`)
+    fetch(`http://stride.ddns.net:8080/tasks/parentIdIsNull?owner_id=${ownerId}&parent_id=null&finish_date=${today.toISOString().split('T')[0]}&finish_date=${tomorrow.toISOString().split('T')[0]}`)
       .then((response) => response.json())
       .then((data) => setTasks(data))
       .catch((error) => console.error('Error fetching tasks:', error));
   }, [ownerId, today, tomorrow]);
 
-  useEffect(() => { fetchTasks(); }, [fetchTasks]);
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
-  const filteredTasks = tasks.filter((task) => task.name.toLowerCase().includes(search.toLowerCase()));
+  // Handle updating the isDone state
+  const handleFinishedChange = async (e, task) => {
+    e.stopPropagation(); // Prevent click from propagating to the parent div
+    const updatedIsDone = !task.isDone; // Toggle the isDone state
+    const updatedTask = { ...task, isDone: updatedIsDone }; // Create updated task object
+
+    try {
+      const response = await fetch(`http://stride.ddns.net:8080/tasks`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTask),
+      });
+
+      if (response.ok) {
+        // Update the task state locally
+        setTasks((prevTasks) =>
+          prevTasks.map((t) => (t.id === task.id ? updatedTask : t))
+        );
+      } else {
+        console.error('Error updating task isDone status');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const filteredTasks = tasks.filter((task) => {
+    if (search.startsWith('#')) {
+      // Search by tags
+      const tagQuery = search.substring(1).toLowerCase();
+      return task.taskTags?.some((tag) => tag.name.toLowerCase().includes(tagQuery));
+    } else {
+      // Search by task name
+      return task.name.toLowerCase().includes(search.toLowerCase());
+    }
+  });
   const todayTasks = filteredTasks.filter((task) => task.finishDate === today.toISOString().split('T')[0]);
   const tomorrowTasks = filteredTasks.filter((task) => task.finishDate === tomorrow.toISOString().split('T')[0]);
 
-  const handleTaskCreated = () => { fetchTasks(); setShowPopup(false); };
-  const handleTaskUpdated = () => { fetchTasks(); setShowTaskMenu(false); };
-  const handleTaskDeleted = () => { fetchTasks(); setShowTaskMenu(false); };
+  const handleTaskCreated = () => {
+    fetchTasks();
+    setShowPopup(false);
+  };
 
   return (
     <main className="main">
       {[
         { title: 'Today', date: formatDate(today), tasks: todayTasks },
         {
-          title: 'Tomorrow', date: formatDate(tomorrow), tasks: tomorrowTasks, showAddButton: true,
+          title: 'Tomorrow',
+          date: formatDate(tomorrow),
+          tasks: tomorrowTasks,
+          showAddButton: true,
         },
-      ].map(({
-               title, date, tasks, showAddButton,
-             }) => (
+      ].map(({ title, date, tasks, showAddButton }) => (
         <div key={title} className="main__column">
           <div className="main__title-item">
             <h3 className="main__title">{title}</h3>
@@ -61,25 +97,46 @@ function Main({ ownerId, search }) {
             {showAddButton && <button className="main__button" onClick={() => setShowPopup(true)}>+</button>}
           </div>
           {tasks.map((task) => (
-            <div key={task.id} className="main__item" onClick={() => { setSelectedTask(task); setShowTaskView(true); }}>
+            <div
+              key={task.id}
+              className="main__item"
+              onClick={() => {
+                setSelectedTask(task);
+                setShowTaskView(true);
+              }}
+            >
               <div className="main__item-header">
-                <h3 className="main__item-title">{task.name}</h3>
-                <button onClick={(e) => { e.stopPropagation(); setSelectedTask(task); setShowTaskMenu(true); setTaskMenuAction('showButtons'); }}>:</button>
-                {showTaskMenu && selectedTask && selectedTask.id === task.id && taskMenuAction === 'showButtons' && (
-                  <div className="action-buttons">
-                    <button onClick={(e) => { e.stopPropagation(); setTaskMenuAction('edit'); setShowTaskView(false); }}>Edit</button>
-                    <button onClick={(e) => { e.stopPropagation(); setTaskMenuAction('delete'); setShowTaskView(false); }}>Delete</button>
-                  </div>
-                )}
+                {/* Task Name and Checkbox */}
+                <div className="main__item-left">
+                  <h3 className={`main__item-title ${task.isDone ? 'task-finished' : ''}`}>
+                    {task.name}
+                  </h3>
+                </div>
+                {/* Checkbox to mark task as done/undone */}
+                <input
+                  type="checkbox"
+                  className="styled-checkbox"
+                  checked={task.isDone}
+                  onClick={(e) => handleFinishedChange(e, task)}
+                />
               </div>
-              <div className="main__item-subtitle">{task.name}</div>
+              <div className="main__item-subtitle">{task.description}</div>
+
+              {/* Display Tags under Task Description */}
               <div className="main__tags">
-                {task.tags.map((tag) => (
-                  <span key={tag.id} className="main__tag" style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}>
-                    #
-                    {tag.name.toLowerCase()}
-                  </span>
-                ))}
+                {task.taskTags && task.taskTags.length > 0 ? (
+                  task.taskTags.map((tag) => (
+                    <span
+                      key={tag.id}
+                      className="main__tag"
+                      style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}
+                    >
+                      #{tag.name.toLowerCase()}
+                    </span>
+                  ))
+                ) : (
+                  <span>No Tags</span>
+                )}
               </div>
             </div>
           ))}
@@ -89,9 +146,6 @@ function Main({ ownerId, search }) {
       {selectedTask && (
         <>
           {showTaskView && <TaskView show={showTaskView} task={selectedTask} onClose={() => setShowTaskView(false)} />}
-          {showTaskMenu && (taskMenuAction === 'edit' || taskMenuAction === 'delete') && (
-            <TaskMenu task={selectedTask} action={taskMenuAction} onClose={() => setShowTaskMenu(false)} onTaskUpdated={handleTaskUpdated} onTaskDeleted={handleTaskDeleted} />
-          )}
         </>
       )}
     </main>

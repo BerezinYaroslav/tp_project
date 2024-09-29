@@ -57,6 +57,10 @@
   border-radius: 20px;
 }
 
+.main__item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .main__item-header {
   display: flex;
   justify-content: space-between;
@@ -71,14 +75,7 @@
 .main__item-subtitle {
   padding-bottom: 30px;
   font-size: 18px;
-}
-
-.main__tag {
-  text-align: center;
-  padding: 5px 10px;
-  border-radius: 10px;
-  margin-right: 10px;
-  border: 1px solid black;
+  word-wrap: anywhere;
 }
 
 .action-buttons {
@@ -103,4 +100,53 @@
 
 .action-buttons button:hover {
   background: #f0f0f0;
+}
+
+.main__button:hover {
+  background-color: #e1b307;
+}
+
+.task-finished {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.styled-checkbox {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  appearance: none;
+  border: 2px solid #f7b500;
+  background-color: transparent;
+  border-radius: 5px;
+  position: relative;
+}
+
+.styled-checkbox:checked {
+  background-color: #f7b500;
+  border-color: #f7b500;
+}
+
+.styled-checkbox:checked::after {
+  content: '✔'; /* Checkmark */
+  font-size: 18px;
+  color: black; /* Changed to black */
+  position: absolute;
+  left: 5px;
+  top: 1px;
+}
+
+.main__tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.main__tag {
+  display: inline-block;
+  background: #f0f0f0;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border-radius: 5px;
 }

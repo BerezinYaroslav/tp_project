@@ -1,0 +1,76 @@
+.subtasks-pane {
+  margin-top: 20px;
+}
+
+.subtasks-list {
+  max-height: 100px; /* Fixed height */
+  overflow-y: auto; /* Enables scrolling when the list exceeds the height */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.subtask-item input[type="checkbox"]{
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  appearance: none;
+  border: 2px solid #f7b500;
+  background-color: transparent;
+  border-radius: 5px;
+  position: relative;
+}
+
+.subtask-item input[type="checkbox"]:checked{
+  background-color: #f7b500;
+  border-color: #f7b500;
+}
+
+.st-delete{
+
+}
+
+.subtask-item:last-child {
+  border-bottom: none;
+}
+
+.subtask-completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.subtask-create {
+  display: flex;
+  align-items: center;
+}
+
+.subtask-create input {
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.subtask-create button {
+  padding: 5px 10px;
+  background-color: #ffcc00;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.subtask-create button:hover {
+  background-color: #e1b307;
+}

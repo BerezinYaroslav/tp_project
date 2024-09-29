@@ -8,19 +8,79 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .popup-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  width: 300px;
+  width: 350px;
   position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .close {
   position: absolute;
   top: 10px;
   right: 10px;
+  font-size: 18px;
   cursor: pointer;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.task-form label {
+  font-weight: bold;
+  display: block;
+  margin: 10px 0 5px;
+}
+
+.task-form input,
+.task-form textarea,
+.task-form select {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.task-form input[type="date"] {
+  padding-left: 35px; /* Reserve space for calendar icon */
+  background: url('https://img.icons8.com/ios/50/calendar--v1.png') no-repeat scroll 8px 8px;
+  background-size: 24px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #f1c40f;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.submit-button:hover {
+  background-color: #e1b307;
+}
+
+select {
+  appearance: none;
+  background-image: url('https://img.icons8.com/ios/50/expand-arrow.png');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+select:focus {
+  outline: none;
 }

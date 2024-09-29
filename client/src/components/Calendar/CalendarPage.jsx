@@ -9,7 +9,7 @@ function CalendarPage() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://localhost:8080/tasks'); // Adjust the API endpoint as needed
+        const response = await fetch('http://stride.ddns.net:8080/tasks/parentIdIsNull?parentId=null'); // Adjust the API endpoint as needed
         const data = await response.json();
         setTasks(data);
       } catch (error) {
@@ -31,7 +31,6 @@ function CalendarPage() {
 
   return (
     <div className="calendar-page">
-      <h1>Calendar</h1>
       <Calendar tasks={filteredTasks} currentDate={currentDate} setCurrentDate={setCurrentDate} />
     </div>
   );
