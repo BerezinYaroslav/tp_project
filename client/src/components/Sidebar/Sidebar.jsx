@@ -6,7 +6,7 @@ function Sidebar() {
 
   return (
     <div className="sidebar">
-      <Link to="/" className={location.pathname === '/' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+      <Link to="/tasks" className={location.pathname === '/tasks' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
         <svg width="34" height="26" viewBox="0 0 34 26" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="14.5786" height="6.5" rx="1.5" fill="black" />
           <rect x="18.7439" y="19.5" width="14.5786" height="6.5" rx="1.5" fill="black" />
@@ -50,7 +50,7 @@ function Sidebar() {
         </svg>
         Calendar
       </Link>
-      <Link to="/lists" className={location.pathname === '/lists' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+      <Link to="/lists" className={/^\/lists(-tasks\/\d+)?$/.test(location.pathname) ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
         <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             opacity="0.3"

@@ -1,18 +1,67 @@
 .analytics-page {
+  width: 100%;
+  background-color: #F9F9F9;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 30px 20px 20px 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.analytics-left,
+.analytics-right {
+  width: 48%;
+  background-color: white;
   padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.analytics-left h2,
+.analytics-right h2 {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.analytics-left p {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 20px;
 }
 
 .chart-container {
-  width: 50%;
-  margin: 0 auto;
-}
-
-.data-container {
-  display: flex;
-  justify-content: space-around;
   margin-top: 20px;
 }
 
-.data-item {
-  text-align: center;
+.bar-chart,
+.pie-chart {
+  height: 400px;
 }
+
+.pie-chart {
+  position: relative;
+}
+
+.legend-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.analytics-right .legend-item span {
+  font-size: 14px;
+  margin-left: 5px;
+}
+

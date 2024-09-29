@@ -1,0 +1,46 @@
+.about {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+}
+
+.about__icon {
+  width: 100px;
+  height: 100px;
+}
+
+.about h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.about p {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.about a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.about a:hover {
+  text-decoration: underline;
+}
+
+.about h2 {
+  font-size: 1.5em;
+  margin-top: 20px;
+}
+
+.about ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.about li {
+  font-size: 1.2em;
+  margin: 5px 0;
+}

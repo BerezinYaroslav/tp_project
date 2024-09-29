@@ -1,36 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';  // Import useParams to get route params
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
-import '../Tasks/AllTasks.css';
+import './AllTasks.css';
 
-function ListTasks({ search }) {
-  const { listId } = useParams(); // Extract listId from the route
-  const [listName, setListName] = useState('Loading...');
+function AllTasks({ ownerId, search }) {
   const [tasks, setTasks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskView, setShowTaskView] = useState(false);
 
-  const fetchListName = useCallback(() => {
-    fetch(`http://stride.ddns.net:8080/lists/${listId}`)
-      .then((response) => response.json())
-      .then((data) => setListName(data.name))
-      .catch((error) => console.error('Error fetching list:', error));
-  }, [listId]);
-
-  // Fetch all tasks for the given list
+  // Fetch all tasks for the given owner
   const fetchTasks = useCallback(() => {
-    fetch(`http://stride.ddns.net:8080/tasks/list?listId=${listId}`)
+    fetch(`http://stride.ddns.net:8080/tasks/parentIdIsNull?owner_id=${ownerId}&parentId=null`)
       .then((response) => response.json())
       .then((data) => setTasks(data))
       .catch((error) => console.error('Error fetching tasks:', error));
-  }, [listId]);
+  }, [ownerId]);
 
   useEffect(() => {
     fetchTasks();
-    fetchListName();
-  }, [fetchListName, fetchTasks]);
+  }, [fetchTasks]);
 
   // Handle updating the isDone state
   const handleFinishedChange = async (e, task) => {
@@ -96,8 +85,7 @@ function ListTasks({ search }) {
 
   return (
     <main className="tasks">
-      <div className="lists-header">
-        <h1>{listName}</h1>
+      <div className="tasks__header">
         <button className="tasks__create-button" onClick={() => setShowPopup(true)}>+</button>
       </div>
       <div className="tasks__list">
@@ -163,4 +151,4 @@ function ListTasks({ search }) {
   );
 }
 
-export default ListTasks;
+export default AllTasks;

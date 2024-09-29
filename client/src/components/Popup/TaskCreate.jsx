@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TagCreate from './TagCreate.jsx';
-import ListCreate from './ListCreate.jsx'; // Assuming this component already exists
+import './TaskCreate.css';
 
 function TaskCreate({ show, onClose, onTaskCreated }) {
   const [newTask, setNewTask] = useState({
@@ -9,22 +9,20 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     finishDate: '',
     tags: [],
     lists: [],
-    priority: 1,
   });
   const [tags, setTags] = useState([]);
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
-  const [showListCreate, setShowListCreate] = useState(false);
 
   useEffect(() => {
     // Fetch existing tags
-    fetch('http://localhost:8080/tags')
+    fetch('http://stride.ddns.net:8080/tags')
       .then((response) => response.json())
       .then((data) => setTags(data))
       .catch((error) => console.error('Error fetching tags:', error));
 
     // Fetch existing lists
-    fetch('http://localhost:8080/lists')
+    fetch('http://stride.ddns.net:8080/lists')
       .then((response) => response.json())
       .then((data) => setLists(data))
       .catch((error) => console.error('Error fetching lists:', error));
@@ -42,7 +40,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:8080/tasks', {
+    fetch('http://stride.ddns.net:8080/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +48,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
       body: JSON.stringify(newTask),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(() => {
         onTaskCreated();
       })
       .catch((error) => {
@@ -66,54 +64,75 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     <div className="popup">
       <div className="popup-content">
         <span className="close" onClick={onClose}>&times;</span>
-        <h2>Create New Task</h2>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Task Name:
-            <input type="text" name="name" value={newTask.name} onChange={(e) => setNewTask({ ...newTask, name: e.target.value })} required />
-          </label>
-          <label>
-            Description:
-            <textarea name="description" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} />
-          </label>
-          <label>
-            Finish Date:
-            <input type="date" name="finishDate" value={newTask.finishDate} onChange={(e) => setNewTask({ ...newTask, finishDate: e.target.value })} required />
-          </label>
-          <label>
-            Tags:
-            <div>
-              {tags.map((tag) => (
-                <span key={tag.id} style={{ backgroundColor: tag.color, marginRight: '5px' }}>
-                  {tag.name}
-                </span>
-              ))}
-            </div>
-            <button type="button" onClick={() => setShowTagCreate(true)}>New Tag</button>
-            {showTagCreate && <TagCreate onTagCreated={handleTagCreated} onClose={() => setShowTagCreate(false)} />}
-          </label>
-          <label>
-            Lists:
-            <div>
+        <h2 className="title">New Task</h2>
+        <form onSubmit={handleSubmit} className="task-form">
+          <label>Date</label>
+          <input
+            type="date"
+            name="finishDate"
+            value={newTask.finishDate}
+            onChange={(e) => setNewTask({ ...newTask, finishDate: e.target.value })}
+            required
+          />
+
+          <label>Task</label>
+          <input
+            type="text"
+            name="name"
+            value={newTask.name}
+            onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+            required
+          />
+
+          <label>Comments</label>
+          <textarea
+            name="description"
+            value={newTask.description}
+            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+          />
+
+          <label>List</label>
+          <div className="input-with-button">
+            <select
+              name="lists"
+              value={newTask.lists}
+              onChange={(e) => setNewTask({ ...newTask, lists: [e.target.value] })}
+            >
+              <option value="">Select</option>
               {lists.map((list) => (
-                <span key={list.id}>{list.name}</span>
+                <option key={list.id} value={list.id}>{list.name}</option>
               ))}
-            </div>
-            <button type="button" onClick={() => setShowListCreate(true)}>New List</button>
-            {showListCreate && <ListCreate onListCreated={handleListCreated} onClose={() => setShowListCreate(false)} />}
-          </label>
-          <label>
-            Priority:
-            <select name="priority" value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })} required>
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5}>5</option>
             </select>
-          </label>
-          <button type="submit">Create Task</button>
+          </div>
+
+          <label>Tag</label>
+          <div className="input-with-button">
+            <select
+              name="tags"
+              value={newTask.tags}
+              onChange={(e) => setNewTask({ ...newTask, tags: [e.target.value] })}
+            >
+              <option value="">Select</option>
+              {tags.map((tag) => (
+                <option key={tag.id} value={tag.id}>{tag.name}</option>
+              ))}
+            </select>
+            <button type="button" className="new-button" onClick={() => setShowTagCreate(true)}>
+              New Tag
+            </button>
+          </div>
+
+          <button type="submit" className="submit-button">Add Task</button>
         </form>
+
+        {/* Tag Create Popup */}
+        {showTagCreate && (
+          <div className="popup">
+            <div className="popup-content">
+              <TagCreate onTagCreated={handleTagCreated} onClose={() => setShowTagCreate(false)} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
