@@ -25,3 +25,10 @@ services:
       - '8080'
     ports:
       - '8080:8080'
+
+  # FRONT
+  front:
+    container_name: stride-front
+    build: ./front
+    ports:
+      - '5173:5173'
