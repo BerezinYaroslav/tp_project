@@ -9,37 +9,37 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TagServiceImpl implements TagService {
-    private final TagRepository repository;
+public class TaskTagServiceImpl implements TaskTagService {
+    private final TaskTagRepository repository;
 
     @Override
-    public void addTag(Tag tag) {
+    public TaskTag addTag(TaskTag taskTag) {
         log.info("Add a tag");
 
-        if (tag.getColor() == null) {
-            tag.setColor("#ffffff");
+        if (taskTag.getColor() == null) {
+            taskTag.setColor("#ffffff");
         }
 
-        repository.save(tag);
+        return repository.save(taskTag);
     }
 
     @Override
-    public List<Tag> getTags() {
+    public List<TaskTag> getTags() {
         log.info("Get tags");
         return repository.findAll();
     }
 
     @Override
-    public Tag getTagById(Long id) {
+    public TaskTag getTagById(Long id) {
         log.info("Get a tag by id");
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("There is no a tag with id " + id));
     }
 
     @Override
-    public void updateTag(Tag tag) {
+    public TaskTag updateTag(TaskTag taskTag) {
         log.info("Update a tag");
-        repository.save(tag);
+        return repository.save(taskTag);
     }
 
     @Override

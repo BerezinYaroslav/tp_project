@@ -15,7 +15,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository repository;
 
     @Override
-    public void addTask(Task task) {
+    public Task addTask(Task task) {
         log.info("Add a task");
 
         if (task.getCreationDate() == null) {
@@ -25,13 +25,37 @@ public class TaskServiceImpl implements TaskService {
             task.setIsDone(false);
         }
 
-        repository.save(task);
+        return repository.save(task);
     }
 
     @Override
     public List<Task> getTasks() {
         log.info("Get tasks");
         return repository.findAll();
+    }
+
+    @Override
+    public List<Task> getTasksByListId(Long listId) {
+        log.info("Get tasks where list id = {}", listId);
+        return repository.findAllByList_Id(listId);
+    }
+
+    @Override
+    public List<Task> getTasksByParentId(Long parentId) {
+        log.info("Get tasks where parent id = {}", parentId);
+        return repository.findAllByParentId(parentId);
+    }
+
+    @Override
+    public List<Task> getTasksByIsDone(Boolean isDone) {
+        log.info("Get tasks where is done = {}", isDone);
+        return repository.findAllByIsDone(isDone);
+    }
+
+    @Override
+    public List<Task> getTasksByParentIdIsNull() {
+        log.info("Get tasks where parent id is null");
+        return repository.findAllByParentIdIsNull();
     }
 
     @Override
@@ -42,9 +66,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public Task updateTask(Task task) {
         log.info("Update a task");
-        repository.save(task);
+        return repository.save(task);
     }
 
     @Override

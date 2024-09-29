@@ -1,4 +1,4 @@
-package ru.kts_team.back.user;
+package ru.kts_team.back.tag;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -16,126 +16,126 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/tags")
 @RequiredArgsConstructor
-@Tag(name = "users", description = "Controller for Users")
+@Tag(name = "tags", description = "Controller for Task Tags")
 @CrossOrigin("*")
-public class UserController {
-    private final UserService service;
+public class TaskTagController {
+    private final TaskTagService service;
 
     @PostMapping(produces = {"application/json"})
     @Operation(
-            summary = "Creation User",
-            description = "Creation User",
-            tags = {"users"}
+            summary = "Creation Task Tag",
+            description = "Creation Task Tag",
+            tags = {"tags"}
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Creation User",
+                    description = "Creation Task Tag",
                     content = {
                             @Content(
                                     mediaType = APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = User.class)
+                                    schema = @Schema(implementation = TaskTag.class)
                             )
                     })
     })
-    public User addUser(@RequestBody @Valid User user) {
-        return service.addUser(user);
+    public TaskTag addTag(@RequestBody @Valid TaskTag taskTag) {
+        return service.addTag(taskTag);
     }
 
     @GetMapping(produces = {"application/json"})
     @Operation(
-            summary = "Getting all Users",
-            description = "Getting all Users",
-            tags = {"users"}
+            summary = "Getting all Task Tags",
+            description = "Getting all Task Tags",
+            tags = {"tags"}
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Getting all Users",
+                    description = "Getting all Task Tags",
                     content = {
                             @Content(
                                     mediaType = APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = User.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = TaskTag.class))
                             )
                     })
     })
-    public List<User> getUsers() {
-        return service.getUsers();
+    public List<TaskTag> getTags() {
+        return service.getTags();
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
     @Operation(
-            summary = "Getting User by ID",
-            description = "Getting User by ID",
-            tags = {"users"}
+            summary = "Getting Task Tag by ID",
+            description = "Getting Task Tag by ID",
+            tags = {"tags"}
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Getting User by ID",
+                    description = "Getting Task Tag by ID",
                     content = {
                             @Content(
                                     mediaType = APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = User.class)
+                                    schema = @Schema(implementation = TaskTag.class)
                             )
                     })
     })
-    public User getUserById(@PathVariable Long id) {
-        return service.getUserById(id);
+    public TaskTag getTagById(@PathVariable Long id) {
+        return service.getTagById(id);
     }
 
     @PutMapping(produces = {"application/json"})
     @Operation(
-            summary = "Updating User",
-            description = "Updating User",
-            tags = {"users"}
+            summary = "Updating Task Tag",
+            description = "Updating Task Tag",
+            tags = {"tags"}
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Updating User",
+                    description = "Updating Task Tag",
                     content = {
                             @Content(
                                     mediaType = APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = User.class)
+                                    schema = @Schema(implementation = TaskTag.class)
                             )
                     })
     })
-    public User updateUser(@RequestBody @Valid User user) {
-        return service.updateUser(user);
+    public TaskTag updateTag(@RequestBody @Valid TaskTag taskTag) {
+        return service.updateTag(taskTag);
     }
 
     @DeleteMapping(produces = {"application/json"})
     @Operation(
-            summary = "Deleting all Users",
-            description = "Deleting all Users",
-            tags = {"users"}
+            summary = "Deleting all Task Tags",
+            description = "Deleting all Task Tags",
+            tags = {"tags"}
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Deleting all Users"
+                    description = "Deleting all Task Tags"
             )
     })
-    public void deleteUsers() {
-        service.deleteUsers();
+    public void deleteTags() {
+        service.deleteTags();
     }
 
     @DeleteMapping(value = "/{id}", produces = {"application/json"})
     @Operation(
-            summary = "Deleting User By ID",
-            description = "Deleting User By ID",
-            tags = {"users"}
+            summary = "Deleting Task Tag By ID",
+            description = "Deleting Task Tag By ID",
+            tags = {"tags"}
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Deleting User By ID"
+                    description = "Deleting Task Tag By ID"
             )
     })
-    public void deleteUserById(@PathVariable Long id) {
-        service.deleteUserById(id);
+    public void deleteTagById(@PathVariable Long id) {
+        service.deleteTagById(id);
     }
 }

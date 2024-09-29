@@ -1,5 +1,6 @@
 package ru.kts_team.back.task;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -8,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.kts_team.back.list.TaskList;
-import ru.kts_team.back.tag.Tag;
+import ru.kts_team.back.tag.TaskTag;
 import ru.kts_team.back.user.User;
 
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "tasks")
 @RequiredArgsConstructor
+@Schema(name = "Task", description = "Model for Tasks")
 public class Task {
     @Id
     @Column(name = "id")
@@ -28,6 +30,11 @@ public class Task {
     @NotEmpty
     @Size(max = 50, min = 1)
     private String name;
+
+    @Column(name = "description")
+    @NotEmpty
+    @Size(min = 1)
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
@@ -61,5 +68,5 @@ public class Task {
     @JoinTable(name = "tasks_tags",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> tags;
+    private List<TaskTag> taskTags;
 }

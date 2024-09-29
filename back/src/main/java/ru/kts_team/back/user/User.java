@@ -1,5 +1,6 @@
 package ru.kts_team.back.user;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @RequiredArgsConstructor
+@Schema(name = "User", description = "Model for Users")
 public class User {
     @Id
     @Column(name = "id")
@@ -38,7 +40,4 @@ public class User {
     @Size(max = 50)
     @NotEmpty
     private String password;
-
-    @OneToMany(mappedBy = "owner")
-    private List<Task> tasks;
 }
