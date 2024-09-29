@@ -1,4 +1,4 @@
-# Web-приложение Stride
+# Web-приложение Stride - http://stride.ddns.net
 
 ## ТП-3-3
 
