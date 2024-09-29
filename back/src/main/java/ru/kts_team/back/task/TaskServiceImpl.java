@@ -35,6 +35,30 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> getTasksByListId(Long listId) {
+        log.info("Get tasks where list id = {}", listId);
+        return repository.findAllByList_Id(listId);
+    }
+
+    @Override
+    public List<Task> getTasksByParentId(Long parentId) {
+        log.info("Get tasks where parent id = {}", parentId);
+        return repository.findAllByParentId(parentId);
+    }
+
+    @Override
+    public List<Task> getTasksByIsDone(Boolean isDone) {
+        log.info("Get tasks where is done = {}", isDone);
+        return repository.findAllByIsDone(isDone);
+    }
+
+    @Override
+    public List<Task> getTasksByParentIdIsNull() {
+        log.info("Get tasks where parent id is null");
+        return repository.findAllByParentIdIsNull();
+    }
+
+    @Override
     public Task getTaskById(Long id) {
         log.info("Get a task by id");
         return repository.findById(id)

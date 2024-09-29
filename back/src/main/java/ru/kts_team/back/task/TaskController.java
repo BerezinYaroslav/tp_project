@@ -65,6 +65,90 @@ public class TaskController {
         return service.getTasks();
     }
 
+    @GetMapping(value = "/list", produces = {"application/json"})
+    @Operation(
+            summary = "Getting all Tasks by List ID",
+            description = "Getting all Tasks by List ID",
+            tags = {"tasks"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Getting all Tasks by List ID",
+                    content = {
+                            @Content(
+                                    mediaType = APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = Task.class))
+                            )
+                    })
+    })
+    public List<Task> getTasksByListId(@RequestParam Long listId) {
+        return service.getTasksByListId(listId);
+    }
+
+    @GetMapping(value = "/parent", produces = {"application/json"})
+    @Operation(
+            summary = "Getting all Tasks by Parent ID",
+            description = "Getting all Tasks by Parent ID",
+            tags = {"tasks"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Getting all Tasks by Parent ID",
+                    content = {
+                            @Content(
+                                    mediaType = APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = Task.class))
+                            )
+                    })
+    })
+    public List<Task> getTasksByParentId(@RequestParam Long parentId) {
+        return service.getTasksByParentId(parentId);
+    }
+
+    @GetMapping(value = "/isDone", produces = {"application/json"})
+    @Operation(
+            summary = "Getting all Tasks by Is Done",
+            description = "Getting all Tasks by Is Done",
+            tags = {"tasks"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Getting all Tasks by Is Done",
+                    content = {
+                            @Content(
+                                    mediaType = APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = Task.class))
+                            )
+                    })
+    })
+    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone) {
+        return service.getTasksByIsDone(isDone);
+    }
+
+    @GetMapping(value = "/parentIdIsNull", produces = {"application/json"})
+    @Operation(
+            summary = "Getting all Tasks by Parent ID is null",
+            description = "Getting all Tasks by Parent ID is null",
+            tags = {"tasks"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Getting all Tasks by Parent ID is null",
+                    content = {
+                            @Content(
+                                    mediaType = APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = Task.class))
+                            )
+                    })
+    })
+    public List<Task> getTasksByParentIdIsNull() {
+        return service.getTasksByParentIdIsNull();
+    }
+
     @GetMapping(value = "/{id}", produces = {"application/json"})
     @Operation(
             summary = "Getting Task by ID",
