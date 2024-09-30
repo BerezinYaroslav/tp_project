@@ -27,7 +27,7 @@ create table tasks
 (
     id            bigint generated always as identity primary key,
     name          varchar(50) not null unique,
-    description   varchar     not null,
+    description   varchar,
     owner_id      bigint      references users (id) on delete set null,
     creation_date timestamp,
     finish_date   timestamp,

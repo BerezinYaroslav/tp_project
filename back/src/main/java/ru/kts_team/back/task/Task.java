@@ -32,8 +32,6 @@ public class Task {
     private String name;
 
     @Column(name = "description")
-    @NotEmpty
-    @Size(min = 1)
     private String description;
 
     @ManyToOne
