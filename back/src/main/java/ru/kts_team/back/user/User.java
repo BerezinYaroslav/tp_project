@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import ru.kts_team.back.task.Task;
-
-import java.util.List;
 
 @Data
 @Entity
@@ -20,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     @NotEmpty
     @Size(max = 50, min = 1)
     private String name;
