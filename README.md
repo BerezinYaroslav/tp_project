@@ -3,9 +3,9 @@
 ## ТП-3-3
 
 ## Команда
-* [Березин Ярослав](https://github.com/BerezinYaroslav) - TeamLead & Backend Developer
-* [Харламов Иван](https://github.com/AlataO) - DB Developer, BA & Tech Writer
-* [Савенкова Александра](https://github.com/SavenkovaAV) - Frontend Developer, Designer & QA
+* [Березин Ярослав](https://github.com/BerezinYaroslav) - TeamLead, Backend & DB Developer
+* [Харламов Иван](https://github.com/AlataO) - Frontend Developer, BA & Tech Writer
+* [Савенкова Александра](https://github.com/SavenkovaAV) - Designer & QA
 
 ## Тема
 Приложение для создания и управления личными или профессиональными целями, с напоминаниями и отслеживанием прогресса.
