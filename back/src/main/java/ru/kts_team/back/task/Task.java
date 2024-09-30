@@ -26,14 +26,12 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     @NotEmpty
     @Size(max = 50, min = 1)
     private String name;
 
     @Column(name = "description")
-    @NotEmpty
-    @Size(min = 1)
     private String description;
 
     @ManyToOne
