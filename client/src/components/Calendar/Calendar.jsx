@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TaskCreate from "../Popup/TaskCreate.jsx";
 import TaskView from "../Popup/TaskView.jsx";
 
@@ -22,24 +22,28 @@ function Calendar({ tasks }) {
   };
 
   const getFirstDayOfMonth = (month, year) => {
-    return new Date(year, month, 1).getDay();
+    return new Date(year, month, 1).getDay(); // Sunday = 0, Monday = 1, etc.
   };
 
   const generateCalendar = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
-    const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+    const firstDay = getFirstDayOfMonth(currentMonth, currentYear) || 7; // Ensure Sunday is treated as 7 for proper layout
     const days = [];
     let day = 1;
 
-    for (let i = 0; i < 6; i++) {
-      for (let j = 0; j < 7; j++) {
-        if (i === 0 && j < (firstDay === 0 ? 6 : firstDay - 1)) {
-          days.push(null);
-        } else if (day > daysInMonth) {
-          days.push(null);
-        } else {
-          days.push(day++);
-        }
+    // Adjust the grid to only include the required number of rows
+    const totalCells = Math.ceil((daysInMonth + (firstDay - 1)) / 7) * 7; // Total number of cells needed
+
+    for (let i = 1; i <= totalCells; i++) {
+      if (i < firstDay) {
+        // Empty cells before the first day of the month
+        days.push(null);
+      } else if (day > daysInMonth) {
+        // Empty cells after the last day of the month
+        days.push(null);
+      } else {
+        // Days of the current month
+        days.push(day++);
       }
     }
 
@@ -103,13 +107,13 @@ function Calendar({ tasks }) {
       <div className="calendar-grid">
         {renderCalendar()}
       </div>
-          {showTaskView && (
-            <TaskView
-              show={showTaskView}
-              task={selectedTask}
-              onClose={() => setShowTaskView(false)}
-            />
-          )}
+      {showTaskView && (
+        <TaskView
+          show={showTaskView}
+          task={selectedTask}
+          onClose={() => setShowTaskView(false)}
+        />
+      )}
     </div>
   );
 }
