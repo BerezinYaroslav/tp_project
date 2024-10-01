@@ -111,7 +111,13 @@ function SubtasksPane({ taskId, parentFinishDate }) {
             <span className={subtask.isDone ? 'subtask-completed' : ''}>
               {subtask.name}
             </span>
-            <button className="tags-delete-button" onClick={() => handleDeleteSubtask(subtask.id)}>X</button>
+            <button
+              type="button"
+              className="tags-delete-button"
+              onClick={() => handleDeleteSubtask(subtask.id)}
+            >
+              X
+            </button>
           </div>
         ))}
       </div>
@@ -124,7 +130,9 @@ function SubtasksPane({ taskId, parentFinishDate }) {
           onChange={(e) => setNewSubtaskName(e.target.value)}
           placeholder="New subtask name"
         />
-        <button onClick={handleCreateSubtask}>Add Subtask</button>
+        <button type="button" onClick={handleCreateSubtask}>
+          Add Subtask
+        </button>
       </div>
     </div>
   );

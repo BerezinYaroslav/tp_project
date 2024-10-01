@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import TagCreate from './TagCreate';
 import SubtasksPane from './SubtasksPane';
+import './TaskView.css'; // Assuming you have a corresponding CSS file
 
 function TaskView({ task, onClose }) {
   const [editedTask, setEditedTask] = useState({ ...task });
-  const [tags, setTags] = useState(task.taskTags || []);
+  const [tags, setTags] = useState(task.taskTags || []); // Tags already assigned to the task
+  const [allTags, setAllTags] = useState([]); // Available tags
+  const [selectedTagId, setSelectedTagId] = useState(''); // To reset "Select Tag" dropdown
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
 
@@ -14,6 +17,12 @@ function TaskView({ task, onClose }) {
       .then((response) => response.json())
       .then((data) => setLists(data))
       .catch((error) => console.error('Error fetching lists:', error));
+
+    // Fetch available tags (for selection)
+    fetch('http://stride.ddns.net:8080/tags')
+      .then((response) => response.json())
+      .then((data) => setAllTags(data))
+      .catch((error) => console.error('Error fetching tags:', error));
   }, []);
 
   // Handle form input changes for editing
@@ -28,6 +37,17 @@ function TaskView({ task, onClose }) {
   // Handle tag removal
   const handleRemoveTag = (tagId) => {
     setTags(tags.filter((tag) => tag.id !== tagId));
+  };
+
+  // Handle tag selection
+  const handleTagSelect = (e) => {
+    const tagId = e.target.value;
+    const selectedTag = allTags.find((tag) => tag.id === parseInt(tagId));
+    if (selectedTag && !tags.some((tag) => tag.id === selectedTag.id)) {
+      setTags([...tags, selectedTag]);
+    }
+    // Reset the dropdown to "Select Tag" after a tag is selected
+    setSelectedTagId('');
   };
 
   // Handle task update submission (will only trigger reload for main task changes)
@@ -75,7 +95,9 @@ function TaskView({ task, onClose }) {
 
   // Handle new tag creation
   const handleTagCreated = (newTag) => {
-    setTags([...tags, newTag]); // Add new tag to the task's tag list
+    setAllTags([...allTags, newTag]); // Add new tag to available tags
+    setTags([...tags, newTag]); // Automatically select the new tag for the task
+    setShowTagCreate(false); // Close the tag creation popup
   };
 
   return (
@@ -161,6 +183,16 @@ function TaskView({ task, onClose }) {
           </div>
 
           <div className="input-with-button">
+            <select
+              name="tags"
+              value={selectedTagId} // Reset to default after selecting a tag
+              onChange={handleTagSelect}
+            >
+              <option value="">Select Tag</option>
+              {allTags.map((tag) => (
+                <option key={tag.id} value={tag.id}>{tag.name}</option>
+              ))}
+            </select>
             <button
               type="button"
               className="tags-button"

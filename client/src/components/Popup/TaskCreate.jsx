@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TagCreate from './TagCreate.jsx';
+import TagCreate from './TagCreate';
 import './TaskCreate.css';
 
 function TaskCreate({ show, onClose, onTaskCreated }) {
@@ -7,10 +7,12 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     name: '',
     description: '',
     finishDate: '',
-    tags: [],
+    taskTags: [],
     lists: [],
   });
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([]); // Available tags
+  const [selectedTags, setSelectedTags] = useState([]); // Tags selected for the task
+  const [selectedTagId, setSelectedTagId] = useState(''); // To reset "Select Tag" dropdown
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
 
@@ -26,26 +28,53 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
       .then((response) => response.json())
       .then((data) => setLists(data))
       .catch((error) => console.error('Error fetching lists:', error));
+
+    // Automatically set default task date to today
+    const today = new Date().toISOString().split('T')[0];
+    setNewTask((prevTask) => ({
+      ...prevTask,
+      finishDate: today,
+    }));
   }, []);
 
+  // Handle new tag creation from TagCreate
   const handleTagCreated = (newTag) => {
-    setTags([...tags, newTag]);
+    setTags([...tags, newTag]); // Add new tag to available tags
+    setSelectedTags([...selectedTags, newTag]); // Also select it for the current task
     setShowTagCreate(false);
   };
 
-  const handleListCreated = (newList) => {
-    setLists([...lists, newList]);
-    setShowListCreate(false);
+  // Handle tag selection
+  const handleTagSelect = (e) => {
+    const tagId = e.target.value;
+    const selectedTag = tags.find((tag) => tag.id === parseInt(tagId));
+
+    if (selectedTag && !selectedTags.some((tag) => tag.id === selectedTag.id)) {
+      setSelectedTags([...selectedTags, selectedTag]);
+    }
+
+    // Reset the dropdown to "Select Tag" after a tag is selected
+    setSelectedTagId('');
+  };
+
+  // Handle tag removal
+  const handleRemoveTag = (tagId) => {
+    setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const taskData = {
+      ...newTask,
+      taskTags: selectedTags, // Add selected tags to task
+    };
+
     fetch('http://stride.ddns.net:8080/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newTask),
+      body: JSON.stringify(taskData),
     })
       .then((response) => response.json())
       .then(() => {
@@ -63,9 +92,11 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
   return (
     <div className="popup">
       <div className="popup-content">
-        <span className="close" onClick={onClose}>&times;</span>
+        <span className="close-button" onClick={onClose}>Close</span>
         <h2 className="title">New Task</h2>
+
         <form onSubmit={handleSubmit} className="task-form">
+          {/* Date Field */}
           <label>Date</label>
           <input
             type="date"
@@ -75,6 +106,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             required
           />
 
+          {/* Task Name Field */}
           <label>Task</label>
           <input
             type="text"
@@ -84,6 +116,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             required
           />
 
+          {/* Task Description Field */}
           <label>Comments</label>
           <textarea
             name="description"
@@ -91,6 +124,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
           />
 
+          {/* List Selection */}
           <label>List</label>
           <div className="input-with-button">
             <select
@@ -105,23 +139,44 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             </select>
           </div>
 
-          <label>Tag</label>
+          {/* Tag Management */}
+          <label>Tags</label>
+          <div className="tags-container">
+            {selectedTags.map((tag) => (
+              <span
+                key={tag.id}
+                className="task-tag"
+                style={{ backgroundColor: tag.color }}
+              >
+                #{tag.name}{' '}
+                <button
+                  type="button"
+                  className="tags-delete-button"
+                  onClick={() => handleRemoveTag(tag.id)}
+                >
+                  x
+                </button>
+              </span>
+            ))}
+          </div>
+
           <div className="input-with-button">
             <select
               name="tags"
-              value={newTask.tags}
-              onChange={(e) => setNewTask({ ...newTask, tags: [e.target.value] })}
+              value={selectedTagId}
+              onChange={handleTagSelect}
             >
-              <option value="">Select</option>
+              <option value="">Select Tag</option>
               {tags.map((tag) => (
                 <option key={tag.id} value={tag.id}>{tag.name}</option>
               ))}
             </select>
-            <button type="button" className="new-button" onClick={() => setShowTagCreate(true)}>
+            <button type="button" className="tags-button" onClick={() => setShowTagCreate(true)}>
               New Tag
             </button>
           </div>
 
+          {/* Submit Button */}
           <button type="submit" className="submit-button">Add Task</button>
         </form>
 
