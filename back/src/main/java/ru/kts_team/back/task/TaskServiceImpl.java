@@ -68,7 +68,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task updateTask(Task task) {
         log.info("Update a task");
-        return repository.save(task);
+        Task updatedTask = repository.save(task);
+
+        if (task.getParentId() != null) {
+            Task parentTask = getTaskById(task.getParentId());
+            List<Task> subtasks = getTasksByParentId(parentTask.getId());
+            log.info(subtasks.toString());
+
+            if ((!subtasks.isEmpty()) && (subtasks.stream().allMatch(Task::getIsDone))) {
+                parentTask.setIsDone(true);
+                updateTask(parentTask);
+            }
+        }
+
+        return updatedTask;
     }
 
     @Override
