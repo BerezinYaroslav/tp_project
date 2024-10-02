@@ -85,7 +85,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001; /* Ensure it's above other elements */
+  z-index: 1001;
 }
 
 .action-buttons button {
@@ -128,9 +128,9 @@
 }
 
 .styled-checkbox:checked::after {
-  content: '✔'; /* Checkmark */
+  content: '✔';
   font-size: 18px;
-  color: black; /* Changed to black */
+  color: black;
   position: absolute;
   left: 5px;
   top: 1px;

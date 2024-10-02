@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -9,12 +9,10 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Clear any previous errors
+    setError(null);
 
     try {
-      // Simulate login with mock data
       if (email === 'mock@example.com' && password === 'mockpassword') {
-        // Redirect to the main app after successful login
         navigate('/');
       } else {
         setError('Invalid email or password');

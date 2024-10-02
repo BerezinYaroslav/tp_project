@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 import notification from '../../images/notification.png';
 import avatar from '../../images/avatar.png';
 
@@ -69,7 +69,10 @@ function Header({ search, setSearch }) {
   return (
     <header className="header">
       <h1 className="header__logo">
-        <Link to="/main" className={location.pathname === '/main' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+        <Link
+          to="/main"
+          className={location.pathname === '/main' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}
+        >
           STRIDE
         </Link>
       </h1>
@@ -110,7 +113,7 @@ function Header({ search, setSearch }) {
         )}
 
         {username}
-        <img src={avatar} alt="avatar" className="header__avatar" width={50} height={50} onClick={toggleMenuDropdown}/>
+        <img src={avatar} alt="avatar" className="header__avatar" width={50} height={50} onClick={toggleMenuDropdown} />
         {showMenuDropdown && (
           <div className="header__dropdown">
             <h2><a href="/about">About Stride</a></h2>

@@ -5,7 +5,7 @@ import icon from '../../images/icon-512.png';
 function About() {
   return (
     <div className="about">
-      <img src={icon} alt="App Icon" className="about__icon" />
+      <img src={icon} alt="App Icon" className="about__icon"/>
       <h1>About Stride</h1>
       <p>Version: 0.80085</p>
       <p>This app is designed to help you manage your tasks efficiently and effectively.</p>

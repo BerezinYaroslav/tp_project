@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import TaskCreate from "../Popup/TaskCreate.jsx";
-import TaskView from "../Popup/TaskView.jsx";
+import TaskCreate from '../Popup/TaskCreate.jsx';
+import TaskView from '../Popup/TaskView.jsx';
 
 function Calendar({ tasks }) {
   const currentDate = new Date();
@@ -11,19 +11,16 @@ function Calendar({ tasks }) {
 
   const getMonthName = (monthIndex) => {
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December',
     ];
     return monthNames[monthIndex];
   };
 
-  const getDaysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
+  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
-  const getFirstDayOfMonth = (month, year) => {
-    return new Date(year, month, 1).getDay(); // Sunday = 0, Monday = 1, etc.
-  };
+  const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay() // Sunday = 0, Monday = 1, etc.
+  ;
 
   const generateCalendar = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
@@ -92,12 +89,16 @@ function Calendar({ tasks }) {
     ));
   };
 
-  const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   return (
     <div className="calendar">
       <div className="calendar-header">
-        <h2>{getMonthName(currentMonth)} {currentYear}</h2>
+        <h2>
+          {getMonthName(currentMonth)}
+          {' '}
+          {currentYear}
+        </h2>
       </div>
       <div className="weekdays">
         {weekdays.map((weekday, index) => (

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
 import './AllTasks.css';
 
-function AllTasks({ ownerId, search }) {
+function AllTasks({ownerId, search}) {
   const [tasks, setTasks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -25,7 +25,7 @@ function AllTasks({ ownerId, search }) {
   const handleFinishedChange = async (e, task) => {
     e.stopPropagation(); // Prevent click from propagating to the parent div
     const updatedIsDone = !task.isDone; // Toggle the isDone state
-    const updatedTask = { ...task, isDone: updatedIsDone }; // Create updated task object
+    const updatedTask = {...task, isDone: updatedIsDone}; // Create updated task object
 
     try {
       const response = await fetch(`http://stride.ddns.net:8080/tasks`, {
@@ -121,9 +121,9 @@ function AllTasks({ ownerId, search }) {
                       <span
                         key={tag.id}
                         className="tasks__tag"
-                        style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}
+                        style={{backgroundColor: tag.color, color: getTextColor(tag.color)}}
                       >
-                        {tag.name.toLowerCase()}
+                        #{tag.name.toLowerCase()}
                       </span>
                     ))
                   ) : (
@@ -135,7 +135,7 @@ function AllTasks({ ownerId, search }) {
           </div>
         ))}
       </div>
-      <TaskCreate show={showPopup} onClose={() => setShowPopup(false)} onTaskCreated={handleTaskCreated} />
+      <TaskCreate show={showPopup} onClose={() => setShowPopup(false)} onTaskCreated={handleTaskCreated}/>
       {selectedTask && (
         <>
           {showTaskView && (

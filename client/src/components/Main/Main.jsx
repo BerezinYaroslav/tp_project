@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState, useEffect, useCallback, useMemo,
+} from 'react';
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
 
@@ -33,14 +35,13 @@ function Main({ ownerId, search }) {
     fetchTasks();
   }, [fetchTasks]);
 
-  // Handle updating the isDone state
   const handleFinishedChange = async (e, task) => {
-    e.stopPropagation(); // Prevent click from propagating to the parent div
-    const updatedIsDone = !task.isDone; // Toggle the isDone state
-    const updatedTask = { ...task, isDone: updatedIsDone }; // Create updated task object
+    e.stopPropagation();
+    const updatedIsDone = !task.isDone;
+    const updatedTask = { ...task, isDone: updatedIsDone };
 
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks`, {
+      const response = await fetch('http://stride.ddns.net:8080/tasks', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -49,10 +50,7 @@ function Main({ ownerId, search }) {
       });
 
       if (response.ok) {
-        // Update the task state locally
-        setTasks((prevTasks) =>
-          prevTasks.map((t) => (t.id === task.id ? updatedTask : t))
-        );
+        setTasks((prevTasks) => prevTasks.map((t) => (t.id === task.id ? updatedTask : t)));
       } else {
         console.error('Error updating task isDone status');
       }
@@ -63,13 +61,11 @@ function Main({ ownerId, search }) {
 
   const filteredTasks = tasks.filter((task) => {
     if (search.startsWith('#')) {
-      // Search by tags
       const tagQuery = search.substring(1).toLowerCase();
       return task.taskTags?.some((tag) => tag.name.toLowerCase().includes(tagQuery));
-    } else {
-      // Search by task name
-      return task.name.toLowerCase().includes(search.toLowerCase());
     }
+
+    return task.name.toLowerCase().includes(search.toLowerCase());
   });
   const todayTasks = filteredTasks.filter((task) => task.finishDate === today.toISOString().split('T')[0]);
   const tomorrowTasks = filteredTasks.filter((task) => task.finishDate === tomorrow.toISOString().split('T')[0]);
@@ -89,7 +85,9 @@ function Main({ ownerId, search }) {
           tasks: tomorrowTasks,
           showAddButton: true,
         },
-      ].map(({ title, date, tasks, showAddButton }) => (
+      ].map(({
+        title, date, tasks, showAddButton,
+      }) => (
         <div key={title} className="main__column">
           <div className="main__title-item">
             <h3 className="main__title">{title}</h3>
@@ -109,8 +107,8 @@ function Main({ ownerId, search }) {
                 {/* Task Name and Checkbox */}
                 <div className="main__item-left">
                   <h3 className={`main__item-title ${task.isDone ? 'task-finished' : ''}`}>
-                    {task.name}
-                  </h3>
+              {task.name}
+            </h3>
                 </div>
                 {/* Checkbox to mark task as done/undone */}
                 <input
@@ -126,16 +124,17 @@ function Main({ ownerId, search }) {
               <div className="main__tags">
                 {task.taskTags && task.taskTags.length > 0 ? (
                   task.taskTags.map((tag) => (
-                    <span
-                      key={tag.id}
-                      className="main__tag"
-                      style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}
-                    >
-                      #{tag.name.toLowerCase()}
-                    </span>
+              <span
+                key={tag.id}
+                className="main__tag"
+                style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}
+              >
+                      #
+                {tag.name.toLowerCase()}
+              </span>
                   ))
                 ) : (
-                  <span>No Tags</span>
+            <span>No Tags</span>
                 )}
               </div>
             </div>

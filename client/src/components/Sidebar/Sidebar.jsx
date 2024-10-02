@@ -6,7 +6,10 @@ function Sidebar() {
 
   return (
     <div className="sidebar">
-      <Link to="/tasks" className={location.pathname === '/tasks' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+      <Link
+        to="/tasks"
+        className={location.pathname === '/tasks' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}
+      >
         <svg width="34" height="26" viewBox="0 0 34 26" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="14.5786" height="6.5" rx="1.5" fill="black" />
           <rect x="18.7439" y="19.5" width="14.5786" height="6.5" rx="1.5" fill="black" />
@@ -15,7 +18,10 @@ function Sidebar() {
         </svg>
         Tasks
       </Link>
-      <Link to="/analytics" className={location.pathname === '/analytics' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+      <Link
+        to="/analytics"
+        className={location.pathname === '/analytics' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}
+      >
         <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -32,7 +38,10 @@ function Sidebar() {
         </svg>
         Analytic
       </Link>
-      <Link to="/calendar" className={location.pathname === '/calendar' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+      <Link
+        to="/calendar"
+        className={location.pathname === '/calendar' ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}
+      >
         <svg width="33" height="34" viewBox="0 0 33 34" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -50,7 +59,10 @@ function Sidebar() {
         </svg>
         Calendar
       </Link>
-      <Link to="/lists" className={/^\/lists(-tasks\/\d+)?$/.test(location.pathname) ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}>
+      <Link
+        to="/lists"
+        className={/^\/lists(-tasks\/\d+)?$/.test(location.pathname) ? 'sidebar__item sidebar__item_active' : 'sidebar__item'}
+      >
         <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             opacity="0.3"

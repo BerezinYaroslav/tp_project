@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './TagCreate.css'; // Make sure to import the CSS file
+import './TagCreate.css';
 
 function TagCreate({ onTagCreated, onClose }) {
   const [tagName, setTagName] = useState('');
@@ -7,7 +7,7 @@ function TagCreate({ onTagCreated, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Post request to create a new tag
+
     fetch('http://stride.ddns.net:8080/tags', {
       method: 'POST',
       headers: {

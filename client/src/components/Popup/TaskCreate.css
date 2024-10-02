@@ -52,7 +52,7 @@
 }
 
 .task-form input[type="date"] {
-  padding-left: 35px; /* Reserve space for calendar icon */
+  padding-left: 35px;
   background: url('https://img.icons8.com/ios/50/calendar--v1.png') no-repeat scroll 8px 8px;
   background-size: 24px;
 }
