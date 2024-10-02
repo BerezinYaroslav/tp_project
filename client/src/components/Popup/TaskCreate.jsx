@@ -8,11 +8,11 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     description: '',
     finishDate: '',
     taskTags: [],
-    lists: [],
+    list: null,
   });
-  const [tags, setTags] = useState([]); // Available tags
-  const [selectedTags, setSelectedTags] = useState([]); // Tags selected for the task
-  const [selectedTagId, setSelectedTagId] = useState(''); // To reset "Select Tag" dropdown
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTagId, setSelectedTagId] = useState('');
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
 
@@ -62,6 +62,20 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
   };
 
+  // Handle list selection
+  const handleListSelect = (e) => {
+    const listId = e.target.value;
+    const selectedList = lists.find((list) => list.id === parseInt(listId));
+
+    if (selectedList) {
+      setNewTask((prevTask) => ({
+        ...prevTask,
+        list: selectedList, // Store the selected list object in newTask
+      }));
+    }
+  };
+
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const taskData = {
@@ -128,11 +142,11 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
           <label>List</label>
           <div className="input-with-button">
             <select
-              name="lists"
-              value={newTask.lists}
-              onChange={(e) => setNewTask({ ...newTask, lists: [e.target.value] })}
+              name="list"
+              value={newTask.list?.id || ''}
+              onChange={handleListSelect}
             >
-              <option value="">Select</option>
+              <option value="">Select List</option>
               {lists.map((list) => (
                 <option key={list.id} value={list.id}>{list.name}</option>
               ))}
@@ -148,7 +162,9 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
                 className="task-tag"
                 style={{ backgroundColor: tag.color }}
               >
-                #{tag.name}{' '}
+                #
+                {tag.name}
+                {' '}
                 <button
                   type="button"
                   className="tags-delete-button"

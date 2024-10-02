@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';  // Import useParams to get route params
+import { useParams } from 'react-router-dom';
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
 import '../Tasks/AllTasks.css';
 
 function ListTasks({ search }) {
-  const { listId } = useParams(); // Extract listId from the route
+  const { listId } = useParams();
   const [listName, setListName] = useState('Loading...');
   const [tasks, setTasks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -19,7 +19,6 @@ function ListTasks({ search }) {
       .catch((error) => console.error('Error fetching list:', error));
   }, [listId]);
 
-  // Fetch all tasks for the given list
   const fetchTasks = useCallback(() => {
     fetch(`http://stride.ddns.net:8080/tasks/list?listId=${listId}`)
       .then((response) => response.json())
@@ -32,14 +31,13 @@ function ListTasks({ search }) {
     fetchListName();
   }, [fetchListName, fetchTasks]);
 
-  // Handle updating the isDone state
   const handleFinishedChange = async (e, task) => {
-    e.stopPropagation(); // Prevent click from propagating to the parent div
-    const updatedIsDone = !task.isDone; // Toggle the isDone state
-    const updatedTask = { ...task, isDone: updatedIsDone }; // Create updated task object
+    e.stopPropagation();
+    const updatedIsDone = !task.isDone;
+    const updatedTask = { ...task, isDone: updatedIsDone };
 
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks`, {
+      const response = await fetch('http://stride.ddns.net:8080/tasks', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -48,10 +46,7 @@ function ListTasks({ search }) {
       });
 
       if (response.ok) {
-        // Update the task state locally
-        setTasks((prevTasks) =>
-          prevTasks.map((t) => (t.id === task.id ? updatedTask : t))
-        );
+        setTasks((prevTasks) => prevTasks.map((t) => (t.id === task.id ? updatedTask : t)));
       } else {
         console.error('Error updating task isDone status');
       }
@@ -62,13 +57,11 @@ function ListTasks({ search }) {
 
   const filteredTasks = tasks.filter((task) => {
     if (search.startsWith('#')) {
-      // Search by tags
       const tagQuery = search.substring(1).toLowerCase();
       return task.taskTags?.some((tag) => tag.name.toLowerCase().includes(tagQuery));
-    } else {
-      // Search by task name
-      return task.name.toLowerCase().includes(search.toLowerCase());
     }
+
+    return task.name.toLowerCase().includes(search.toLowerCase());
   });
 
   const handleTaskCreated = () => {
@@ -121,11 +114,10 @@ function ListTasks({ search }) {
                 />
               </div>
 
-              {/* Inline display of finishDate, list, and tags */}
               <div className="tasks__item-info">
                 <span className="tasks__item-date">{formatDate(task.finishDate)}</span>
                 {task.lists && task.lists.length > 0 && (
-                  <span className="tasks__item-list">{task.lists[0].name}</span> // Assuming one list per task
+                  <span className="tasks__item-list">{task.lists[0].name}</span>
                 )}
                 <div className="tasks__tags">
                   {task.taskTags && task.taskTags.length > 0 ? (
@@ -135,6 +127,7 @@ function ListTasks({ search }) {
                         className="tasks__tag"
                         style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}
                       >
+                        #
                         {tag.name.toLowerCase()}
                       </span>
                     ))

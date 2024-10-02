@@ -32,7 +32,7 @@
   border-radius: 5px;
 }
 
-.task-form input[type="date"]{
+.task-form input[type="date"] {
   width: 30%;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .input-group {
-  width: 48%; /* Make sure inputs take half of the available space */
+  width: 48%;
 }
 
 .task-form input[type="date"],
@@ -141,5 +141,5 @@
 }
 
 .task-view-popup {
-  width: 450px; /* Adjusted width to fit the new layout */
+  width: 450px;
 }

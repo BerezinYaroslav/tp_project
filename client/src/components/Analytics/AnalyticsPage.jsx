@@ -21,7 +21,6 @@ function AnalyticsPage() {
     }
   };
 
-  // Helper to get the start and end dates of the current week (Monday to Sunday)
   const getCurrentWeekRange = () => {
     const currentDate = new Date();
     const dayOfWeek = currentDate.getDay() || 7; // Adjust to make Sunday = 7, Monday = 1
@@ -72,7 +71,6 @@ function AnalyticsPage() {
     ],
   };
 
-  // Calculate the proportion of completed vs unfinished tasks for Pie chart
   const getCompletionProportion = () => {
     let completed = 0;
     let unfinished = 0;
@@ -94,7 +92,7 @@ function AnalyticsPage() {
     datasets: [
       {
         data: [completed, unfinished],
-        backgroundColor: ['#77DD77', '#F7B500'], // Green for completed, Yellow for unfinished
+        backgroundColor: ['#77DD77', '#F7B500'],
         hoverBackgroundColor: ['#77DD77', '#F7B500'],
       },
     ],

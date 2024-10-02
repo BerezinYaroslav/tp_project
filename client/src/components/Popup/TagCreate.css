@@ -1,4 +1,4 @@
-/* General popup styling */
+
 .tag-popup-overlay {
   position: fixed;
   top: 0;
@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Make sure it's on top */
+  z-index: 1000;
 }
 
 .tag-popup {
@@ -28,7 +28,7 @@
   text-align: center;
 }
 
-/* Styling the input fields */
+
 .tag-popup form label {
   font-weight: bold;
   margin-bottom: 8px;
@@ -52,7 +52,7 @@
   vertical-align: middle;
 }
 
-/* Buttons styling */
+
 .tag-popup .button-group {
   display: flex;
   justify-content: space-between;
@@ -73,7 +73,7 @@
   background-color: #e1b307;
 }
 
-/* Cancel button styling */
+
 .tag-popup button.cancel-button {
   background-color: #ff4d4f;
 }
@@ -82,7 +82,7 @@
   background-color: #e53e3f;
 }
 
-/* Close button (X) */
+
 .tag-popup .close-button {
   position: absolute;
   top: 10px;

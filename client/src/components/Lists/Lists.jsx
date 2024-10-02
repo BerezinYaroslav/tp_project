@@ -7,10 +7,9 @@ function Lists() {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch lists from the server
   const fetchLists = async () => {
     try {
-      const response = await fetch('http://stride.ddns.net:8080/lists'); // Replace with your actual API endpoint
+      const response = await fetch('http://stride.ddns.net:8080/lists');
       const data = await response.json();
       setLists(data);
     } catch (error) {
@@ -22,21 +21,18 @@ function Lists() {
     fetchLists();
   }, []);
 
-  // Handle list creation and close the popup
   const handleListCreated = () => {
     fetchLists();
     setShowPopup(false);
   };
 
-  // Handle navigation to list tasks
   const handleListClick = (listId) => {
     navigate(`/list-tasks/${listId}`); // Navigate to the proper route with listId as a parameter
   };
 
-  // Handle list deletion
   const deleteList = async (listId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this list?");
-    if (!confirmDelete) return; // Abort if the user cancels the deletion
+    const confirmDelete = window.confirm('Are you sure you want to delete this list?');
+    if (!confirmDelete) return;
 
     try {
       const response = await fetch(`http://stride.ddns.net:8080/lists/${listId}`, {
@@ -44,7 +40,6 @@ function Lists() {
       });
 
       if (response.ok) {
-        // Remove the deleted list from the state (UI)
         setLists(lists.filter((list) => list.id !== listId));
       } else {
         console.error('Error deleting list');

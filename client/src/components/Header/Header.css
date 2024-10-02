@@ -39,12 +39,14 @@
   align-items: center;
   gap: 15px;
 }
+
 .header__notification {
   width: 30px;
   display: flex;
   align-items: center;
   gap: 15px;
 }
+
 .header__dropdown {
   position: absolute;
   top: 60px;
@@ -74,6 +76,7 @@
 .header__dropdown li:last-child {
   border-bottom: none;
 }
+
 .header__notification-container {
   position: relative;
   display: inline-block;

@@ -41,6 +41,7 @@ h1 {
   flex-direction: column;
   gap: 10px;
 }
+
 .list-item {
   background-color: white;
   border: 1px solid #e0e0e0;
@@ -57,7 +58,7 @@ h1 {
   font-weight: 500;
 }
 
-/* Buttons */
+
 .delete-list-button {
   background-color: #fAbb18;
   color: white;
@@ -78,7 +79,7 @@ h1 {
   filter: brightness(85%);
 }
 
-/* Options Menu (Three Dots) */
+
 .list-item .options {
   font-size: 1.5rem;
   color: #888;

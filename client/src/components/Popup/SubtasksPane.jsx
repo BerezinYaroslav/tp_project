@@ -58,7 +58,7 @@ function SubtasksPane({ taskId, parentFinishDate }) {
     const updatedSubtask = { ...subtask, isDone: !subtask.isDone };
 
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks`, {
+      const response = await fetch('http://stride.ddns.net:8080/tasks', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import {
+  Route, Routes, Navigate, useLocation,
+} from 'react-router-dom';
 import Header from '../Header/Header.jsx';
 import Sidebar from '../Sidebar/Sidebar.jsx';
 import Main from '../Main/Main.jsx';
