@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -61,8 +62,11 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasks() {
-        return service.getTasks();
+    public List<Task> getTasks(@RequestParam Long ownerId) {
+        return service.getTasks().stream()
+                .filter(task -> task.getOwner() != null)
+                .filter(task -> task.getOwner().getId().equals(ownerId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/list", produces = {"application/json"})
@@ -82,8 +86,11 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByListId(@RequestParam Long listId) {
-        return service.getTasksByListId(listId);
+    public List<Task> getTasksByListId(@RequestParam Long listId, @RequestParam Long ownerId) {
+        return service.getTasksByListId(listId).stream()
+                .filter(task -> task.getOwner() != null)
+                .filter(task -> task.getOwner().getId().equals(ownerId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/parent", produces = {"application/json"})
@@ -103,8 +110,11 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByParentId(@RequestParam Long parentId) {
-        return service.getTasksByParentId(parentId);
+    public List<Task> getTasksByParentId(@RequestParam Long parentId, @RequestParam Long ownerId) {
+        return service.getTasksByParentId(parentId).stream()
+                .filter(task -> task.getOwner() != null)
+                .filter(task -> task.getOwner().getId().equals(ownerId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/isDone", produces = {"application/json"})
@@ -124,8 +134,11 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone) {
-        return service.getTasksByIsDone(isDone);
+    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone, @RequestParam Long ownerId) {
+        return service.getTasksByIsDone(isDone).stream()
+                .filter(task -> task.getOwner() != null)
+                .filter(task -> task.getOwner().getId().equals(ownerId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/parentIdIsNull", produces = {"application/json"})
@@ -145,8 +158,11 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByParentIdIsNull() {
-        return service.getTasksByParentIdIsNull();
+    public List<Task> getTasksByParentIdIsNull(@RequestParam Long ownerId) {
+        return service.getTasksByParentIdIsNull().stream()
+                .filter(task -> task.getOwner() != null)
+                .filter(task -> task.getOwner().getId().equals(ownerId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
@@ -166,8 +182,14 @@ public class TaskController {
                             )
                     })
     })
-    public Task getTaskById(@PathVariable Long id) {
-        return service.getTaskById(id);
+    public Task getTaskById(@PathVariable Long id, @RequestParam Long ownerId) {
+        Task task = service.getTaskById(id);
+
+        if ((task.getOwner() != null) && (task.getOwner().getId().equals(ownerId))) {
+            return task;
+        } else {
+            throw new RuntimeException("It's not your task!");
+        }
     }
 
     @PutMapping(produces = {"application/json"})

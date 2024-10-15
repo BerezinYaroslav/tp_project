@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -61,8 +62,11 @@ public class TaskListController {
                             )
                     })
     })
-    public List<TaskList> getLists() {
-        return service.getLists();
+    public List<TaskList> getLists(@RequestParam Long ownerId) {
+        return service.getLists().stream()
+                .filter(list -> list.getOwner() != null)
+                .filter(list -> list.getOwner().getId().equals(ownerId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
@@ -82,8 +86,14 @@ public class TaskListController {
                             )
                     })
     })
-    public TaskList getListById(@PathVariable Long id) {
-        return service.getListById(id);
+    public TaskList getListById(@PathVariable Long id, @RequestParam Long ownerId) {
+        TaskList list = service.getListById(id);
+
+        if ((list.getOwner() != null) && (list.getOwner().getId().equals(ownerId))) {
+            return list;
+        } else {
+            throw new RuntimeException("It's not your list!");
+        }
     }
 
     @PutMapping(produces = {"application/json"})
