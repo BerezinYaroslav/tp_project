@@ -16,10 +16,10 @@
 * [Figma](https://www.figma.com/file/3AqyAoOnwmc4WDSCV06Cx2/Stride?type=design&node-id=0%3A1&mode=design&t=HycYFbVYKflqyUJv-1)
 
 ## Документация
-* Техническое задание [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/TP_TZ.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/TP_TZ.pdf)
-* Курсовой проект [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой_проект.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой_проект.pdf)
-* Перечень задач [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87.pdf)
-* Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo_2.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo_2.pdf)
+* Техническое задание [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Техническое%20задание.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Техническое%20задание.pdf)
+* Курсовой проект [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.pdf)
+* Перечень задач [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Перечень%20задач.pdf)
+* Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.pdf)
 
 ## Яндекс Метрика
 * Отчет [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Yandex_Metrika.pdf)
