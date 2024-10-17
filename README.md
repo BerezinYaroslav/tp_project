@@ -30,3 +30,16 @@
 * Обзор финальной версии приложения [(mov)](https://drive.google.com/file/d/1q0OKG2Wun7taOwF_44DhJN0zDKYh46sf/view?usp=sharing)
 * Обзор бэкенда [(mov)](https://drive.google.com/file/d/1k2TvcajKWYWnFQJIPz0MDEZw2EcUkySd/view?usp=sharing)
 * Обзор фронтенда [(mov)](https://drive.google.com/file/d/1GbELHedeugn_1TjOww7I6EjVgxEHjFBM/view?usp=sharing)
+
+## Ссылка на проект
+
+### http://stride.ddns.net
+
+### Тестовые данные для входа:
+* Email: user@mail.ru
+* Пароль: user
+
+### Также вы можете зарегистрировать нового пользователя, введя:
+* Имя пользователя
+* Почту
+* Пароль
