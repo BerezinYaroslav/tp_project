@@ -36,4 +36,7 @@ public class User {
     @Column(name = "password")
     @NotEmpty
     private String password;
+
+    @Column(name = "subscription_level")
+    private Integer subscriptionLevel;
 }

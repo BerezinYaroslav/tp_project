@@ -6,12 +6,13 @@ drop table if exists users, lists, tasks, tags, tasks_tags cascade;
 --changeset id:2 author:yberezin
 create table users
 (
-    id       bigint generated always as identity primary key,
-    name     varchar(50) not null,
-    age      int check (age > 0),
+    id                 bigint generated always as identity primary key,
+    name               varchar(50) not null,
+    age                int check (age > 0),
     check (age < 150),
-    email    varchar(50) not null,
-    password varchar not null
+    email              varchar(50) not null,
+    password           varchar     not null,
+    subscription_level int default 0
 );
 
 --changeset id:3 author:yberezin
