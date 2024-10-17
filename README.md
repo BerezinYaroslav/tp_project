@@ -22,7 +22,7 @@
 * Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.pdf)
 
 ## Яндекс Метрика
-* Отчет [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Yandex_Metrika.pdf)
+* Отчет [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Яндекс%20метрика.pdf)
 
 ## Презентация
 * Файл презентации [(pptx)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pptx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pdf)
