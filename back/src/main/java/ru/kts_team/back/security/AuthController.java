@@ -29,7 +29,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser() {
+    public ResponseEntity<String> loginUser(@RequestBody User requestUser) {
+        User user = userRepository.findByEmail(requestUser.getEmail())
+                .orElse(null);
+
+        if (user == null) {
+            return new ResponseEntity<>("Invalid email or password!", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!passwordEncoder.matches(requestUser.getPassword(), user.getPassword())) {
+            return new ResponseEntity<>("Invalid email or password!", HttpStatus.UNAUTHORIZED);
+        }
+
         return new ResponseEntity<>("User logged in successfully", HttpStatus.OK);
     }
 }
