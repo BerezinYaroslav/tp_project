@@ -15,6 +15,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) {
         log.info("Add a user");
+
+        if (user.getSubscriptionLevel() == null) {
+            user.setSubscriptionLevel(0);
+        }
+
         return repository.save(user);
     }
 

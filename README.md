@@ -16,11 +16,13 @@
 * [Figma](https://www.figma.com/file/3AqyAoOnwmc4WDSCV06Cx2/Stride?type=design&node-id=0%3A1&mode=design&t=HycYFbVYKflqyUJv-1)
 
 ## Документация
-* Техническое задание [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/TP_TZ.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/TP_TZ.pdf)
-* Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo.pdf)
-* Сопроводительное письмо (новое) [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo_2.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Soprovoditelnoe_pismo_2.pdf)
-* Перечень задач [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87.pdf)
-* Курсовой проект [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой_проект.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой_проект.pdf)
+* Техническое задание [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Техническое%20задание.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Техническое%20задание.pdf)
+* Курсовой проект [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.pdf)
+* Перечень задач [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Перечень%20задач.pdf)
+* Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.pdf)
+
+## Яндекс Метрика
+* Отчет [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Yandex_Metrika.pdf)
 
 ## Презентация
 * Файл презентации [(pptx)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pptx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pdf)
@@ -28,3 +30,11 @@
 * Обзор финальной версии приложения [(mov)](https://drive.google.com/file/d/1q0OKG2Wun7taOwF_44DhJN0zDKYh46sf/view?usp=sharing)
 * Обзор бэкенда [(mov)](https://drive.google.com/file/d/1k2TvcajKWYWnFQJIPz0MDEZw2EcUkySd/view?usp=sharing)
 * Обзор фронтенда [(mov)](https://drive.google.com/file/d/1GbELHedeugn_1TjOww7I6EjVgxEHjFBM/view?usp=sharing)
+
+## Ссылка на проект
+
+### http://stride.ddns.net
+
+### Тестовые данные для входа:
+* Email: user@mail.ru
+* Пароль: user

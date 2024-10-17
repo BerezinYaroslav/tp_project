@@ -34,7 +34,9 @@ public class User {
     private String email;
 
     @Column(name = "password")
-    @Size(max = 50)
     @NotEmpty
     private String password;
+
+    @Column(name = "subscription_level")
+    private Integer subscriptionLevel;
 }
