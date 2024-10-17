@@ -11,7 +11,7 @@ create table users
     age      int check (age > 0),
     check (age < 150),
     email    varchar(50) not null,
-    password varchar(50) not null
+    password varchar not null
 );
 
 --changeset id:3 author:yberezin
