@@ -19,15 +19,15 @@ public class TaskListServiceImpl implements TaskListService {
     }
 
     @Override
-    public List<TaskList> getLists() {
+    public List<TaskList> getLists(Long ownerId) {
         log.info("Get lists");
-        return repository.findAll();
+        return repository.findAllByOwner_Id(ownerId);
     }
 
     @Override
-    public TaskList getListById(Long id) {
+    public TaskList getListById(Long id, Long ownerId) {
         log.info("Get a list by id");
-        return repository.findById(id)
+        return repository.findByIdAndOwner_Id(id, ownerId)
                 .orElseThrow(() -> new RuntimeException("There is no a list with id " + id));
     }
 

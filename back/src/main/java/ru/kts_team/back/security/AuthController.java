@@ -41,7 +41,6 @@ public class AuthController {
             return new ResponseEntity<>("Invalid email or password!", HttpStatus.UNAUTHORIZED);
         }
 
-//        return new ResponseEntity<>("User logged in successfully", HttpStatus.OK);
         return new ResponseEntity<>(String.valueOf(user.getId()), HttpStatus.OK);
     }
 }

@@ -61,8 +61,8 @@ public class TaskTagController {
                             )
                     })
     })
-    public List<TaskTag> getTags() {
-        return service.getTags();
+    public List<TaskTag> getTags(@RequestParam Long ownerId) {
+        return service.getTags(ownerId);
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
@@ -82,8 +82,8 @@ public class TaskTagController {
                             )
                     })
     })
-    public TaskTag getTagById(@PathVariable Long id) {
-        return service.getTagById(id);
+    public TaskTag getTagById(@PathVariable Long id, @RequestParam Long ownerId) {
+        return service.getTagById(id, ownerId);
     }
 
     @PutMapping(produces = {"application/json"})

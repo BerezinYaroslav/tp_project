@@ -24,15 +24,15 @@ public class TaskTagServiceImpl implements TaskTagService {
     }
 
     @Override
-    public List<TaskTag> getTags() {
+    public List<TaskTag> getTags(Long creatorId) {
         log.info("Get tags");
-        return repository.findAll();
+        return repository.findAllByCreator_Id(creatorId);
     }
 
     @Override
-    public TaskTag getTagById(Long id) {
+    public TaskTag getTagById(Long id, Long creatorId) {
         log.info("Get a tag by id");
-        return repository.findById(id)
+        return repository.findByIdAndCreator_Id(id, creatorId)
                 .orElseThrow(() -> new RuntimeException("There is no a tag with id " + id));
     }
 

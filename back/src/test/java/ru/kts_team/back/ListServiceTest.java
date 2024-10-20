@@ -55,24 +55,25 @@ class ListServiceTest {
     void getLists_ShouldReturnAllTaskLists() {
         List<TaskList> taskLists = new ArrayList<>();
         taskLists.add(taskList);
-        when(taskListRepository.findAll()).thenReturn(taskLists);
+        when(taskListRepository.findAllByOwner_Id(1L)).thenReturn(taskLists);
 
-        List<TaskList> result = taskListService.getLists();
+        List<TaskList> result = taskListService.getLists(1L);
 
         assertEquals(1, result.size());
         assertEquals(taskList.getName(), result.get(0).getName());
-        verify(taskListRepository, times(1)).findAll();
+        verify(taskListRepository, times(1)).findAllByOwner_Id(1L);
     }
 
     @Test
     void getListById_ShouldReturnTaskList_WhenExists() {
-        when(taskListRepository.findById(1L)).thenReturn(Optional.of(taskList));
+        when(taskListRepository.findByIdAndOwner_Id(1L, 1L)).thenReturn(Optional.of(taskList));
 
-        TaskList result = taskListService.getListById(1L);
+        System.out.println(taskList);
+        TaskList result = taskListService.getListById(1L, 1L);
 
         assertNotNull(result);
         assertEquals("Work Tasks", result.getName());
-        verify(taskListRepository, times(1)).findById(1L);
+        verify(taskListRepository, times(1)).findByIdAndOwner_Id(1L, 1L);
     }
 
     @Test
@@ -80,14 +81,14 @@ class ListServiceTest {
         when(taskListRepository.findById(1L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            taskListService.getListById(1L);
+            taskListService.getListById(1L, 1L);
         });
 
         String expectedMessage = "There is no a list with id 1";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-        verify(taskListRepository, times(1)).findById(1L);
+        verify(taskListRepository, times(1)).findByIdAndOwner_Id(1L, 1L);
     }
 
     @Test

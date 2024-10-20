@@ -70,24 +70,25 @@ class TagServiceTest {
     void getTags_ShouldReturnAllTags() {
         List<TaskTag> tags = new ArrayList<>();
         tags.add(taskTag);
-        when(taskTagRepository.findAll()).thenReturn(tags);
+        when(taskTagRepository.findAllByCreator_Id(1L)).thenReturn(tags);
 
-        List<TaskTag> result = taskTagService.getTags();
+        List<TaskTag> result = taskTagService.getTags(1L);
 
         assertEquals(1, result.size());
         assertEquals(taskTag.getName(), result.get(0).getName());
-        verify(taskTagRepository, times(1)).findAll();
+        verify(taskTagRepository, times(1)).findAllByCreator_Id(1L);
     }
 
     @Test
     void getTagById_ShouldReturnTaskTag_WhenExists() {
-        when(taskTagRepository.findById(1L)).thenReturn(Optional.of(taskTag));
+        when(taskTagRepository.findByIdAndCreator_Id(1L, 1L)).thenReturn(Optional.of(taskTag));
 
-        TaskTag result = taskTagService.getTagById(1L);
+        System.out.println();
+        TaskTag result = taskTagService.getTagById(1L, 1L);
 
         assertNotNull(result);
         assertEquals("Urgent", result.getName());
-        verify(taskTagRepository, times(1)).findById(1L);
+        verify(taskTagRepository, times(1)).findByIdAndCreator_Id(1L, 1L);
     }
 
     @Test
@@ -95,14 +96,14 @@ class TagServiceTest {
         when(taskTagRepository.findById(1L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            taskTagService.getTagById(1L);
+            taskTagService.getTagById(1L, 1L);
         });
 
         String expectedMessage = "There is no a tag with id 1";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-        verify(taskTagRepository, times(1)).findById(1L);
+        verify(taskTagRepository, times(1)).findByIdAndCreator_Id(1L, 1L);
     }
 
     @Test

@@ -63,29 +63,29 @@ class TaskServiceTest {
     void getTasks_ShouldReturnAllTasks() {
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);
-        when(taskRepository.findAll()).thenReturn(tasks);
+        when(taskRepository.findAllByOwner_Id(1L)).thenReturn(tasks);
 
         List<Task> result = taskService.getTasks(1L);
 
         assertEquals(1, result.size());
         assertEquals(task.getName(), result.get(0).getName());
-        verify(taskRepository, times(1)).findAll();
+        verify(taskRepository, times(1)).findAllByOwner_Id(1L);
     }
 
     @Test
     void getTaskById_ShouldReturnTask_WhenExists() {
-        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(taskRepository.findByIdAndOwner_Id(1L, 1L)).thenReturn(Optional.of(task));
 
         Task result = taskService.getTaskById(1L, 1L);
 
         assertNotNull(result);
         assertEquals("Test Task", result.getName());
-        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).findByIdAndOwner_Id(1L, 1L);
     }
 
     @Test
     void getTaskById_ShouldThrowException_WhenNotFound() {
-        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+        when(taskRepository.findByIdAndOwner_Id(1L, 1L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             taskService.getTaskById(1L, 1L);
@@ -95,7 +95,7 @@ class TaskServiceTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).findByIdAndOwner_Id(1L, 1L);
     }
 
     @Test
