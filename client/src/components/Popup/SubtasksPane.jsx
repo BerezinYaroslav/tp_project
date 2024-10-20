@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import './SubtasksPane.css';
+import API_BASE_URL from '../../config.js';
+import {UserContext} from "../App/UserContext.jsx";
 
 function SubtasksPane({ taskId, parentFinishDate }) {
+  const { userId } = useContext(UserContext);
+const { creds } = useContext(UserContext);
   const [subtasks, setSubtasks] = useState([]);
   const [newSubtaskName, setNewSubtaskName] = useState('');
 
@@ -11,12 +15,18 @@ function SubtasksPane({ taskId, parentFinishDate }) {
   }, [taskId]);
 
   const fetchSubtasks = async () => {
-    try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks/parent?parentId=${taskId}`);
-      const data = await response.json();
-      setSubtasks(data);
-    } catch (error) {
-      console.error('Error fetching subtasks:', error);
+    if (creds) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/tasks/parent?parentId=${taskId}&ownerId=${userId}`, {
+          headers: {
+            'Authorization': `Basic ${btoa(creds)}`
+          }
+        });
+        const data = await response.json();
+        setSubtasks(data);
+      } catch (error) {
+        console.error('Error fetching subtasks:', error);
+      }
     }
   };
 
@@ -34,10 +44,11 @@ function SubtasksPane({ taskId, parentFinishDate }) {
     };
 
     try {
-      const response = await fetch('http://stride.ddns.net:8080/tasks', {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
         },
         body: JSON.stringify(newSubtask),
       });
@@ -58,10 +69,11 @@ function SubtasksPane({ taskId, parentFinishDate }) {
     const updatedSubtask = { ...subtask, isDone: !subtask.isDone };
 
     try {
-      const response = await fetch('http://stride.ddns.net:8080/tasks', {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
         },
         body: JSON.stringify(updatedSubtask),
       });
@@ -79,8 +91,11 @@ function SubtasksPane({ taskId, parentFinishDate }) {
   // Delete a subtask
   const handleDeleteSubtask = async (subtaskId) => {
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks/${subtaskId}`, {
+      const response = await fetch(`${API_BASE_URL}/tasks/${subtaskId}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
       });
 
       if (response.ok) {

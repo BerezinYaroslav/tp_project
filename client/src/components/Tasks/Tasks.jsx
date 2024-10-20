@@ -1,9 +1,13 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
 import './AllTasks.css';
+import API_BASE_URL from '../../config.js';
+import { UserContext } from '../App/UserContext.jsx';
 
 function AllTasks({ownerId, search}) {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [tasks, setTasks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -11,11 +15,17 @@ function AllTasks({ownerId, search}) {
 
   // Fetch all tasks for the given owner
   const fetchTasks = useCallback(() => {
-    fetch(`http://stride.ddns.net:8080/tasks/parentIdIsNull?owner_id=${ownerId}&parentId=null`)
-      .then((response) => response.json())
-      .then((data) => setTasks(data))
-      .catch((error) => console.error('Error fetching tasks:', error));
-  }, [ownerId]);
+    if (creds) {
+      fetch(`${API_BASE_URL}/tasks/parentIdIsNull?ownerId=${userId}&parentId=null`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setTasks(data))
+        .catch((error) => console.error('Error fetching tasks:', error));
+    }
+    }, [ownerId, creds]);
 
   useEffect(() => {
     fetchTasks();
@@ -28,10 +38,11 @@ function AllTasks({ownerId, search}) {
     const updatedTask = {...task, isDone: updatedIsDone}; // Create updated task object
 
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks`, {
+      const response = await fetch(`${API_BASE_URL}/tasks?ownerId=${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
         },
         body: JSON.stringify(updatedTask),
       });

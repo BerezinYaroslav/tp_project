@@ -1,9 +1,31 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import API_BASE_URL from '../../config.js';
+import { UserContext } from '../App/UserContext.jsx';
 
 function ListCreate({ show, onClose, onListCreated }) {
+  const { userId, creds } = useContext(UserContext);  // Fetch userId and creds from context
   const [newList, setNewList] = useState({
     name: '',
+    owner: null, // Will store the owner object
   });
+
+  const [owner, setOwner] = useState(null);
+
+  useEffect(() => {
+    // Fetch the owner (current user) details when component mounts
+    if (userId && creds) {
+      fetch(`${API_BASE_URL}/users/${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setOwner(data);  // Set the fetched owner data
+        })
+        .catch((error) => console.error('Error fetching user:', error));
+    }
+  }, [userId, creds]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -15,20 +37,27 @@ function ListCreate({ show, onClose, onListCreated }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://stride.ddns.net:8080/lists', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newList),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        onListCreated();
+    if (creds && owner) {
+      const listData = {
+        ...newList,
+        owner,  // Attach the owner (user) object to the list
+      };
+
+      fetch(`${API_BASE_URL}/lists`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
+        },
+        body: JSON.stringify(listData),
       })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          onListCreated();  // Notify the parent component about list creation
+          setNewList({ name: '', owner: null });  // Reset the form
+        })
+        .catch((error) => console.error('Error creating list:', error));
+    }
   };
 
   if (!show) {
@@ -43,7 +72,13 @@ function ListCreate({ show, onClose, onListCreated }) {
         <form onSubmit={handleSubmit}>
           <label>
             List Name:
-            <input type="text" name="name" value={newList.name} onChange={handleInputChange} required />
+            <input
+              type="text"
+              name="name"
+              value={newList.name}
+              onChange={handleInputChange}
+              required
+            />
           </label>
           <button className="submit-button" type="submit">Create List</button>
         </form>

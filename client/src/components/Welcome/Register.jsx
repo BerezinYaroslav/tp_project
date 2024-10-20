@@ -1,21 +1,29 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Weclome.css'; // Import the new CSS file
+import API_BASE_URL from '../../config.js';
+import { UserContext } from '../App/UserContext.jsx'; // Import UserContext
 
 function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [age, setAge] = useState(18); // Default age set to 18
   const navigate = useNavigate();
+  const { login, setAuth } = useContext(UserContext);
+  const { logout } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = {
-      id: 1, name, email, password,
+      name,
+      email,
+      password,
+      age, // Include age in the registration payload
     };
 
     try {
-      const response = await fetch('http://stride.ddns.net:8080/users', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,8 +32,12 @@ function Register() {
       });
 
       if (response.ok) {
+        const userId = await response.json();
+        login(userId);
+        setAuth(email, password);
         navigate('/tasks');
       } else {
+        logout();
         console.error('Registration failed');
       }
     } catch (error) {
@@ -59,6 +71,17 @@ function Register() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <label htmlFor="age">Age</label>
+            <input
+              type="number"
+              id="age"
+              min="0"
+              max="150"
+              placeholder="Enter your age"
+              value={age}
+              onChange={(e) => setAge(Number(e.target.value))}
               required
             />
             <button type="submit">Confirm</button>

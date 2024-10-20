@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
+import { UserContext } from '../App/UserContext.jsx';
+import API_BASE_URL from '../../config.js';
 
 Chart.register(...registerables);
 
 function AnalyticsPage() {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -13,7 +17,11 @@ function AnalyticsPage() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('http://stride.ddns.net:8080/tasks/parentIdIsNull?parentId=null');
+      const response = await fetch(`${API_BASE_URL}/tasks/parentIdIsNull?ownerId=${userId}&parentId=null`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      });
       const data = await response.json();
       setTasks(data);
     } catch (error) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import API_BASE_URL from '../../config.js';
 
 function Sidebar() {
   const location = useLocation();

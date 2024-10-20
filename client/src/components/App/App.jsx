@@ -13,27 +13,87 @@ import Login from '../Welcome/Login.jsx';
 import Register from '../Welcome/Register.jsx';
 import AllTasks from '../Tasks/Tasks.jsx';
 import About from '../About/About.jsx';
+import Restore from "../Welcome/Restore.jsx";
+import Reset from "../Welcome/Reset.jsx";
 
 function App() {
   const [search, setSearch] = React.useState('');
   const location = useLocation();
 
+  // Check if the user is authenticated
+  const isAuthenticated = Boolean(localStorage.getItem('userId'));
+
+  // Define pages where Header and Sidebar should not be shown
+  const hideHeaderAndSidebar = ['/login', '/register', '/', '/reset', '/restore'];
+
   return (
     <div className="app">
-      {location.pathname !== '/' && <Header setSearch={setSearch} search={search} />}
+      {/* Render Header only if the current route is not in hideHeaderAndSidebar */}
+      {!hideHeaderAndSidebar.includes(location.pathname) && (
+        <Header setSearch={setSearch} search={search} />
+      )}
+
       <div className="app__container">
-        {location.pathname !== '/' && <Sidebar />}
+        {/* Render Sidebar only if the current route is not in hideHeaderAndSidebar */}
+        {!hideHeaderAndSidebar.includes(location.pathname) && <Sidebar />}
+
         <Routes>
-          <Route path="/main" element={<AllTasks search={search} />} />
-          <Route path="/" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/tasks" element={<Main search={search} />} />
-          <Route path="lists" element={<Lists />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/list-tasks/:listId" element={<ListTasks search={search} />} />
-          <Route path="/about" element={<About />} />
-          <Route path="*" element={<Navigate to="/register" />} />
+          {/* Public routes for unauthenticated users */}
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/tasks" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={isAuthenticated ? <Navigate to="/tasks" /> : <Register />}
+          />
+          <Route
+            path="/reset"
+            element={isAuthenticated ? <Navigate to="/tasks" /> : <Reset />}
+          />
+          <Route
+            path="/restore"
+            element={isAuthenticated ? <Navigate to="/tasks" /> : <Restore />}
+          />
+
+          {/* Redirect from '/' based on authentication status */}
+          <Route
+            path="/"
+            element={isAuthenticated ? <Navigate to="/tasks" /> : <Navigate to="/login" />}
+          />
+
+          {/* Private routes for authenticated users */}
+          <Route
+            path="/tasks"
+            element={isAuthenticated ? <Main search={search} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/main"
+            element={isAuthenticated ? <AllTasks search={search} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/lists"
+            element={isAuthenticated ? <Lists /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/calendar"
+            element={isAuthenticated ? <Calendar /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/analytics"
+            element={isAuthenticated ? <AnalyticsPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/list-tasks/:listId"
+            element={isAuthenticated ? <ListTasks search={search} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/about"
+            element={isAuthenticated ? <About /> : <Navigate to="/login" />}
+          />
+
+          {/* Catch-all route for undefined paths */}
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/tasks" : "/login"} />} />
         </Routes>
       </div>
     </div>

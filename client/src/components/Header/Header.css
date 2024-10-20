@@ -6,6 +6,7 @@
   padding-top: 15px;
   position: sticky;
   width: 100%;
+  z-index: 9999999;
 }
 
 .header__logo {
@@ -49,7 +50,6 @@
 
 .header__dropdown {
   position: absolute;
-  top: 60px;
   right: 0px;
   background-color: white;
   border: 1px solid #ccc;
@@ -57,20 +57,17 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
   min-width: 200px;
-  z-index: 9999999;
 }
 
 .header__dropdown ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  z-index: 9999999;
 }
 
 .header__dropdown li {
   padding: 8px 12px;
   border-bottom: 1px solid #eee;
-  z-index: 9999999;
 }
 
 .header__dropdown li:last-child {
@@ -93,4 +90,41 @@
   font-size: 12px;
 }
 
+.list {
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.list_item{
+  text-align: center;
+  margin: 10px;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.list_item:hover{
+  box-shadow: 0 0 1px 1px;
+}
+
+.dropdown_button {
+  display: block;
+  background-color: #FABB18;
+  color: #000;
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.dropdown_button:hover {
+  background-color: #e1b307;
+}
+
+.dropdown_button:active {
+}
 

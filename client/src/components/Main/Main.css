@@ -45,6 +45,7 @@
   background-color: #FABB18;
   border: none;
   border-radius: 15px;
+  z-index: 1;
 }
 
 .main__item {

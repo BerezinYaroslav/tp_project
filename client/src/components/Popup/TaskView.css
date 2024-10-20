@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 99999999;
 }
 
 .task-view-popup {
@@ -62,8 +63,9 @@
 .tags-button {
   background-color: #ffcc00;
   border: none;
+  margin-right: 5px;
   padding: 10px 20px;
-  width: 30%;
+  width: 40%;
   color: white;
   cursor: pointer;
   border-radius: 5px;

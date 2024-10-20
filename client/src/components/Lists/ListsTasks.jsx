@@ -1,35 +1,82 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
 import '../Tasks/AllTasks.css';
+import API_BASE_URL from '../../config.js';
+import { UserContext } from '../App/UserContext.jsx';
 
 function ListTasks({ search }) {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const { listId } = useParams();
-  const [listName, setListName] = useState('Loading...');
+  const [list, setList] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskView, setShowTaskView] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // State to track edit mode
+  const [newListName, setNewListName] = useState(''); // State to track the new list name
 
-  const fetchListName = useCallback(() => {
-    fetch(`http://stride.ddns.net:8080/lists/${listId}`)
-      .then((response) => response.json())
-      .then((data) => setListName(data.name))
-      .catch((error) => console.error('Error fetching list:', error));
-  }, [listId]);
+  const fetchList = useCallback(() => {
+    if (creds) {
+      fetch(`${API_BASE_URL}/lists/${listId}?ownerId=${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setList(data);
+          setNewListName(data.name); // Initialize newListName with the current list name
+        })
+        .catch((error) => console.error('Error fetching list:', error));
+    }
+  }, [listId, userId, creds]);
 
   const fetchTasks = useCallback(() => {
-    fetch(`http://stride.ddns.net:8080/tasks/list?listId=${listId}`)
-      .then((response) => response.json())
-      .then((data) => setTasks(data))
-      .catch((error) => console.error('Error fetching tasks:', error));
-  }, [listId]);
+    if (creds) {
+      fetch(`${API_BASE_URL}/tasks/list?ownerId=${userId}&listId=${listId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setTasks(data))
+        .catch((error) => console.error('Error fetching tasks:', error));
+    }
+  }, [listId, userId, creds]);
 
   useEffect(() => {
     fetchTasks();
-    fetchListName();
-  }, [fetchListName, fetchTasks]);
+    fetchList();
+  }, [fetchList, fetchTasks]);
+
+  const handleSaveListName = async () => {
+    if (!list) return;
+
+    const updatedList = { ...list, name: newListName };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
+        },
+        body: JSON.stringify(updatedList),
+      });
+
+      if (response.ok) {
+        setList(updatedList);
+        setIsEditing(false);
+      } else {
+        console.error('Error updating list name');
+      }
+    } catch (error) {
+      console.error('Error updating list:', error);
+    }
+  };
 
   const handleFinishedChange = async (e, task) => {
     e.stopPropagation();
@@ -37,10 +84,11 @@ function ListTasks({ search }) {
     const updatedTask = { ...task, isDone: updatedIsDone };
 
     try {
-      const response = await fetch('http://stride.ddns.net:8080/tasks', {
+      const response = await fetch(`${API_BASE_URL}/tasks?ownerId=${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
         },
         body: JSON.stringify(updatedTask),
       });
@@ -90,7 +138,24 @@ function ListTasks({ search }) {
   return (
     <main className="tasks">
       <div className="lists-header">
-        <h1>{listName}</h1>
+        {isEditing ? (
+          <h1 className="lists-header-edit">
+            <input
+              type="text"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+              placeholder={list?.name || 'List Name'}
+              className="lists-header-view"
+            />
+            <button onClick={handleSaveListName} className="tasks__save-button">💾</button>
+          </h1>
+        ) : (
+          <div className="lists-header-view">
+            <h1>{list?.name || ''}
+            <button onClick={() => setIsEditing(true)} className="tasks__edit-button">✎</button>
+            </h1>
+          </div>
+        )}
         <button className="tasks__create-button" onClick={() => setShowPopup(true)}>+</button>
       </div>
       <div className="tasks__list">
@@ -127,8 +192,7 @@ function ListTasks({ search }) {
                         className="tasks__tag"
                         style={{ backgroundColor: tag.color, color: getTextColor(tag.color) }}
                       >
-                        #
-                        {tag.name.toLowerCase()}
+                        #{tag.name.toLowerCase()}
                       </span>
                     ))
                   ) : (
@@ -141,16 +205,12 @@ function ListTasks({ search }) {
         ))}
       </div>
       <TaskCreate show={showPopup} onClose={() => setShowPopup(false)} onTaskCreated={handleTaskCreated} />
-      {selectedTask && (
-        <>
-          {showTaskView && (
-            <TaskView
-              show={showTaskView}
-              task={selectedTask}
-              onClose={() => setShowTaskView(false)}
-            />
-          )}
-        </>
+      {selectedTask && showTaskView && (
+        <TaskView
+          show={showTaskView}
+          task={selectedTask}
+          onClose={() => setShowTaskView(false)}
+        />
       )}
     </main>
   );

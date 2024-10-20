@@ -1,27 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import TagCreate from './TagCreate';
 import SubtasksPane from './SubtasksPane';
+import TagManagement from "./TagManagement.jsx";
 import './TaskView.css';
+import API_BASE_URL from '../../config.js';
+import {UserContext} from "../App/UserContext.jsx";
 
 function TaskView({ task, onClose }) {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [editedTask, setEditedTask] = useState({ ...task });
   const [tags, setTags] = useState(task.taskTags || []);
   const [allTags, setAllTags] = useState([]);
   const [selectedTagId, setSelectedTagId] = useState('');
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
+  const [showTagManagement, setShowTagManagement] = useState(false); // State for tag management popup
 
   useEffect(() => {
-    fetch('http://stride.ddns.net:8080/lists')
-      .then((response) => response.json())
-      .then((data) => setLists(data))
-      .catch((error) => console.error('Error fetching lists:', error));
+    if (creds) {
+      fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setLists(data))
+        .catch((error) => console.error('Error fetching lists:', error));
 
-    fetch('http://stride.ddns.net:8080/tags')
-      .then((response) => response.json())
-      .then((data) => setAllTags(data))
-      .catch((error) => console.error('Error fetching tags:', error));
-  }, []);
+      fetch(`${API_BASE_URL}/tags?ownerId=${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setAllTags(data))
+        .catch((error) => console.error('Error fetching tags:', error));
+    }
+  }, [creds]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,10 +69,11 @@ function TaskView({ task, onClose }) {
     };
 
     try {
-      const response = await fetch('http://stride.ddns.net:8080/tasks', {
+      const response = await fetch(`${API_BASE_URL}/tasks?ownerId=${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
         },
         body: JSON.stringify(updatedTask),
       });
@@ -72,8 +89,11 @@ function TaskView({ task, onClose }) {
 
   const handleDeleteTask = async () => {
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/tasks/${task.id}`, {
+      const response = await fetch(`${API_BASE_URL}/tasks/${task.id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
       });
       if (response.ok) {
         onClose();
@@ -90,6 +110,11 @@ function TaskView({ task, onClose }) {
     setAllTags([...allTags, newTag]);
     setTags([...tags, newTag]);
     setShowTagCreate(false);
+  };
+
+  const handleTagRemoved = (removedTagId) => {
+    setTags(tags.filter(tag => tag.id !== removedTagId));
+    setAllTags(allTags.filter(tag => tag.id !== removedTagId));
   };
 
   return (
@@ -192,6 +217,13 @@ function TaskView({ task, onClose }) {
             >
               New Tag
             </button>
+            <button
+              type="button"
+              className="tags-button"
+              onClick={() => setShowTagManagement(true)}
+            >
+              Manage Tags
+            </button>
           </div>
 
           {/* SubtasksPane */}
@@ -221,6 +253,19 @@ function TaskView({ task, onClose }) {
           <div className="popup">
             <div className="popup-content">
               <TagCreate onTagCreated={handleTagCreated} onClose={() => setShowTagCreate(false)} />
+            </div>
+          </div>
+        )}
+
+        {/* TagManagement Popup */}
+        {showTagManagement && (
+          <div className="popup">
+            <div className="popup-content">
+              <TagManagement
+                tags={allTags}
+                onTagRemoved={handleTagRemoved}
+                onClose={() => setShowTagManagement(false)}
+              />
             </div>
           </div>
         )}

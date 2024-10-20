@@ -1,15 +1,23 @@
 // CalendarPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Calendar from './Calendar';
+import API_BASE_URL from '../../config.js';
+import {UserContext} from "../App/UserContext.jsx";
 
 function CalendarPage() {
+  const { userId } = useContext(UserContext);
+const { creds } = useContext(UserContext);
   const [tasks, setTasks] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://stride.ddns.net:8080/tasks/parentIdIsNull?parentId=null'); // Adjust the API endpoint as needed
+        const response = await fetch(`${API_BASE_URL}/tasks/parentIdIsNull?ownerId=${userId}&parentId=null`, {
+          headers: {
+            'Authorization': `Basic ${btoa(creds)}`
+          }
+        }); // Adjust the API endpoint as needed
         const data = await response.json();
         setTasks(data);
       } catch (error) {

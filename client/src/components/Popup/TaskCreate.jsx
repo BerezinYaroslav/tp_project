@@ -1,41 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import TagCreate from './TagCreate';
 import './TaskCreate.css';
+import API_BASE_URL from '../../config.js';
+import {UserContext} from '../App/UserContext.jsx';
 
 function TaskCreate({ show, onClose, onTaskCreated }) {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [newTask, setNewTask] = useState({
+    owner: null,
     name: '',
     description: '',
     finishDate: '',
     taskTags: [],
     list: null,
   });
+  const [owner, setOwner] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedTagId, setSelectedTagId] = useState('');
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
 
+  const fetchUser = () => {
+    if (userId) {
+      fetch(`${API_BASE_URL}/users/${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setOwner(data);
+        })
+        .catch((error) => console.error('Error fetching user:', error));
+    }
+  };
+
   useEffect(() => {
-    // Fetch existing tags
-    fetch('http://stride.ddns.net:8080/tags')
-      .then((response) => response.json())
-      .then((data) => setTags(data))
-      .catch((error) => console.error('Error fetching tags:', error));
+    if (creds) {
+      // Fetch existing tags
+      fetch(`${API_BASE_URL}/tags?ownerId=${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setTags(data))
+        .catch((error) => console.error('Error fetching tags:', error));
 
-    // Fetch existing lists
-    fetch('http://stride.ddns.net:8080/lists')
-      .then((response) => response.json())
-      .then((data) => setLists(data))
-      .catch((error) => console.error('Error fetching lists:', error));
+      // Fetch existing lists
+      fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setLists(data))
+        .catch((error) => console.error('Error fetching lists:', error));
 
-    // Automatically set default task date to today
-    const today = new Date().toISOString().split('T')[0];
-    setNewTask((prevTask) => ({
-      ...prevTask,
-      finishDate: today,
-    }));
-  }, []);
+      fetchUser();
+
+      // Automatically set default task date to today
+      const today = new Date().toISOString().split('T')[0];
+      setNewTask((prevTask) => ({
+        ...prevTask,
+        finishDate: today,
+      }));
+    }
+  }, [creds]);
 
   // Handle new tag creation from TagCreate
   const handleTagCreated = (newTag) => {
@@ -80,23 +113,26 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     e.preventDefault();
     const taskData = {
       ...newTask,
+      owner: owner,
       taskTags: selectedTags, // Add selected tags to task
     };
-
-    fetch('http://stride.ddns.net:8080/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(taskData),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        onTaskCreated();
+    if (userId && creds) {
+      fetch(`${API_BASE_URL}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
+        },
+        body: JSON.stringify(taskData),
       })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+        .then((response) => response.json())
+        .then(() => {
+          onTaskCreated();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
   };
 
   if (!show) {

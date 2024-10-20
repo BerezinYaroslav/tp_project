@@ -38,6 +38,10 @@
   position: relative;
 }
 
+.calendar-day:hover{
+  box-shadow: 0 0 1px 1px black;
+}
+
 .current-day {
   border: 2px solid black;
 }

@@ -1,24 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListCreate from '../Popup/ListCreate.jsx';
+import API_BASE_URL from '../../config.js';
+import {UserContext} from "../App/UserContext.jsx";
 
 function Lists() {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [lists, setLists] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   const fetchLists = async () => {
-    try {
-      const response = await fetch('http://stride.ddns.net:8080/lists');
-      const data = await response.json();
-      setLists(data);
-    } catch (error) {
-      console.error('Error fetching lists:', error);
+    if (creds) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
+          headers: {
+            'Authorization': `Basic ${btoa(creds)}`
+          }
+        });
+        const data = await response.json();
+        setLists(data);
+      } catch (error) {
+        console.error('Error fetching lists:', error);
+      }
     }
   };
 
   useEffect(() => {
-    fetchLists();
+      fetchLists();
   }, []);
 
   const handleListCreated = () => {
@@ -35,8 +45,11 @@ function Lists() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://stride.ddns.net:8080/lists/${listId}`, {
+      const response = await fetch(`${API_BASE_URL}/lists/${listId}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
       });
 
       if (response.ok) {
@@ -59,8 +72,8 @@ function Lists() {
 
         <div className="lists-container">
           {lists.map((list) => (
-            <div key={list.id} className="list-item">
-              <span onClick={() => handleListClick(list.id)}>{list.name}</span>
+            <div key={list.id} className="list-item" onClick={() => handleListClick(list.id)}>
+              <span>{list.name}</span>
               {/* Delete button */}
               <button className="delete-list-button" onClick={() => deleteList(list.id)}>
                 Delete

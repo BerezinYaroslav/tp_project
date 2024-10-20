@@ -20,6 +20,10 @@
   color: #000;
 }
 
+.sidebar__item:hover {
+  box-shadow: 0 0 1px 1px #FABB18;
+}
+
 .sidebar__item:last-child {
   gap: 20px;
 }
