@@ -115,3 +115,34 @@
 .tasks__create-button:hover {
   background-color: #e1b307;
 }
+
+.tasks__edit-button,
+.tasks__save-button {
+  background: none;
+  border: none;
+  color: #e1b307;
+}
+
+
+.tasks__edit-button:hover,
+.tasks__save-button:hover {
+  border: black;
+  color: #e1b307;
+}
+
+
+.lists-header-edit {
+  align-items: center;
+  gap: 10px;
+}
+
+.lists-header-input {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.lists-header-view {
+  font-weight: bold;
+  border-width: thin;
+}

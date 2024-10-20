@@ -99,3 +99,24 @@
 .tag-popup .close-button:hover {
   background-color: #e1b307;
 }
+
+.task-tag {
+  display: flex;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.tags-delete-button {
+  background: none;
+  border: none;
+  color: #e53e3f;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.tags-delete-button:hover {
+  filter: brightness(90%);
+}

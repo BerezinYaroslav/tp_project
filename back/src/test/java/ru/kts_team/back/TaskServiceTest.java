@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import ru.kts_team.back.task.Task;
 import ru.kts_team.back.task.TaskRepository;
 import ru.kts_team.back.task.TaskServiceImpl;
+import ru.kts_team.back.user.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,11 +31,18 @@ class TaskServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        User user = new User();
+        user.setId(1L);
+        user.setName("user");
+        user.setEmail("user@gmail.com");
+        user.setPassword("user");
+
         task = new Task();
         task.setId(1L);
         task.setName("Test Task");
         task.setCreationDate(new Date());
         task.setIsDone(false);
+        task.setOwner(user);
     }
 
     @Test
@@ -55,39 +63,39 @@ class TaskServiceTest {
     void getTasks_ShouldReturnAllTasks() {
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);
-        when(taskRepository.findAll()).thenReturn(tasks);
+        when(taskRepository.findAllByOwner_Id(1L)).thenReturn(tasks);
 
-        List<Task> result = taskService.getTasks();
+        List<Task> result = taskService.getTasks(1L);
 
         assertEquals(1, result.size());
         assertEquals(task.getName(), result.get(0).getName());
-        verify(taskRepository, times(1)).findAll();
+        verify(taskRepository, times(1)).findAllByOwner_Id(1L);
     }
 
     @Test
     void getTaskById_ShouldReturnTask_WhenExists() {
-        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(taskRepository.findByIdAndOwner_Id(1L, 1L)).thenReturn(Optional.of(task));
 
-        Task result = taskService.getTaskById(1L);
+        Task result = taskService.getTaskById(1L, 1L);
 
         assertNotNull(result);
         assertEquals("Test Task", result.getName());
-        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).findByIdAndOwner_Id(1L, 1L);
     }
 
     @Test
     void getTaskById_ShouldThrowException_WhenNotFound() {
-        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+        when(taskRepository.findByIdAndOwner_Id(1L, 1L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            taskService.getTaskById(1L);
+            taskService.getTaskById(1L, 1L);
         });
 
         String expectedMessage = "There is no a task with id 1";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).findByIdAndOwner_Id(1L, 1L);
     }
 
     @Test
@@ -103,7 +111,7 @@ class TaskServiceTest {
     void updateTask_ShouldReturnUpdatedTask() {
         when(taskRepository.save(task)).thenReturn(task);
 
-        Task result = taskService.updateTask(task);
+        Task result = taskService.updateTask(task, 1L);
 
         assertEquals(task.getName(), result.getName());
         verify(taskRepository, times(1)).save(task);

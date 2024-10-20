@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import ru.kts_team.back.task.Task;
+import ru.kts_team.back.task.TaskRepository;
 import ru.kts_team.back.user.User;
 import ru.kts_team.back.user.UserRepository;
 
@@ -14,6 +16,7 @@ import ru.kts_team.back.user.UserRepository;
 @CrossOrigin("*")
 public class AuthController {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
@@ -34,13 +37,36 @@ public class AuthController {
                 .orElse(null);
 
         if (user == null) {
-            return new ResponseEntity<>("Invalid email or password!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("User does not exist!", HttpStatus.UNAUTHORIZED);
         }
 
         if (!passwordEncoder.matches(requestUser.getPassword(), user.getPassword())) {
-            return new ResponseEntity<>("Invalid email or password!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Invalid password!", HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>("User logged in successfully", HttpStatus.OK);
+        return new ResponseEntity<>(String.valueOf(user.getId()), HttpStatus.OK);
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<String> restorePassword(@RequestBody User requestUser, @RequestParam String taskName) {
+        User user = userRepository.findByEmail(requestUser.getEmail())
+                .orElse(null);
+
+        if (user == null) {
+            return new ResponseEntity<>("User does not exist!", HttpStatus.UNAUTHORIZED);
+        }
+
+        Task task = taskRepository.findAllByOwner_IdOrderByIdDesc(user.getId()).stream()
+                .findFirst()
+                .orElse(null);
+
+        if (task == null || !task.getName().equals(taskName)) {
+            return new ResponseEntity<>("Task name does not match!", HttpStatus.UNAUTHORIZED);
+        }
+
+        user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
+        User savedUser = userRepository.save(user);
+
+        return new ResponseEntity<>(String.valueOf(savedUser.getId()), HttpStatus.OK);
     }
 }

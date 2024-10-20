@@ -1,28 +1,69 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './TagCreate.css';
+import API_BASE_URL from '../../config.js';
+import { UserContext } from "../App/UserContext.jsx";
 
 function TagCreate({ onTagCreated, onClose }) {
-  const [tagName, setTagName] = useState('');
-  const [tagColor, setTagColor] = useState('#ffffff');
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
+  const [newTag, setNewTag] = useState({
+    name: '',
+    color: '#ffffff',
+    creator: null,
+  });
+  const [owner, setOwner] = useState(null);
+
+  const fetchUser = () => {
+    if (userId && creds) {
+      fetch(`${API_BASE_URL}/users/${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setOwner(data);
+          setNewTag((prevTag) => ({
+            ...prevTag,
+            creator: data,
+          }));
+        })
+        .catch((error) => console.error('Error fetching user:', error));
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, [userId, creds]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTag({
+      ...newTag,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    fetch('http://stride.ddns.net:8080/tags', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: tagName, color: tagColor }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        onTagCreated(data);
-        onClose();
+    if (creds) {
+      fetch(`${API_BASE_URL}/tags`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
+        },
+        body: JSON.stringify(newTag),
       })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          onTagCreated(data);
+          onClose();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
   };
 
   return (
@@ -33,16 +74,18 @@ function TagCreate({ onTagCreated, onClose }) {
           <label>Tag Name:</label>
           <input
             type="text"
-            value={tagName}
-            onChange={(e) => setTagName(e.target.value)}
+            name="name"
+            value={newTag.name}
+            onChange={handleInputChange}
             required
           />
 
           <label>Color:</label>
           <input
             type="color"
-            value={tagColor}
-            onChange={(e) => setTagColor(e.target.value)}
+            name="color"
+            value={newTag.color}
+            onChange={handleInputChange}
           />
 
           <div className="button-group">

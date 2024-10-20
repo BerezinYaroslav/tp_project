@@ -61,8 +61,8 @@ public class TaskListController {
                             )
                     })
     })
-    public List<TaskList> getLists() {
-        return service.getLists();
+    public List<TaskList> getLists(@RequestParam Long ownerId) {
+        return service.getLists(ownerId);
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
@@ -82,8 +82,8 @@ public class TaskListController {
                             )
                     })
     })
-    public TaskList getListById(@PathVariable Long id) {
-        return service.getListById(id);
+    public TaskList getListById(@PathVariable Long id, @RequestParam Long ownerId) {
+        return service.getListById(id, ownerId);
     }
 
     @PutMapping(produces = {"application/json"})

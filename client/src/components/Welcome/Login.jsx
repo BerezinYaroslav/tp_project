@@ -1,55 +1,80 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import './Weclome.css'; // Using the same CSS as Register
+import API_BASE_URL from '../../config.js';
+import { UserContext } from '../App/UserContext'; // Import UserContext
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { logout } = useContext(UserContext);
+  const { login } = useContext(UserContext);
+  const { setAuth } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
+
+    const user = {
+      email,
+      password,
+    };
+
     e.preventDefault();
-    setError(null);
 
     try {
-      if (email === 'mock@example.com' && password === 'mockpassword') {
-        navigate('/');
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (response.ok) {
+        const userId = await response.json(); // Expecting the body to be just the user ID
+        login(userId); // Save user ID in context
+        setAuth (email, password);
+        navigate('/tasks'); // Redirect to tasks page
       } else {
-        setError('Invalid email or password');
+        logout();
+        console.error('Login failed');
       }
-    } catch (err) {
-      setError('An error occurred during login');
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <>
+      <header className="register-header"><b>STRIDE</b></header>
+      <div className="register-page">
+        <div className="register-container">
+          <h1>Login</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="submit">Login</button>
+          </form>
+          <div className="register-link">
+            <p>Don't have an account? <Link to="/register">Register here</Link>
+            </p>
+            <p>Forgot your password? <Link to="/reset">Reset here</Link></p>
+          </div>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+      </div>
+    </>
   );
 }
 

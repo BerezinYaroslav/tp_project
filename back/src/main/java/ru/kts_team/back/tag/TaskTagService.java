@@ -5,9 +5,9 @@ import java.util.List;
 public interface TaskTagService {
     TaskTag addTag(TaskTag taskTag);
 
-    List<TaskTag> getTags();
+    List<TaskTag> getTags(Long creatorId);
 
-    TaskTag getTagById(Long id);
+    TaskTag getTagById(Long id, Long creatorId);
 
     TaskTag updateTag(TaskTag taskTag);
 

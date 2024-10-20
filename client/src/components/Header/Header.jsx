@@ -1,17 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import notification from '../../images/notification.png';
 import avatar from '../../images/avatar.png';
+import API_BASE_URL from '../../config.js';
+import { UserContext } from '../App/UserContext.jsx';
+import TaskView from '../Popup/TaskView.jsx'; // Import TaskView
 
 function Header({ search, setSearch }) {
-  const userId = 1;
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
+  const { logout } = useContext(UserContext);
   const [username, setUsername] = useState('');
-  const [tasksForToday, setTasksForToday] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMenuDropdown, setShowMenuDropdown] = useState(false);
   const [taskCount, setTaskCount] = useState(0);
+  const [overdueTasks, setOverdueTasks] = useState([]);
+  const [tasksForToday, setTasksForToday] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null); // State for the selected task
+  const [showTaskView, setShowTaskView] = useState(false); // State to control TaskView visibility
 
   const location = useLocation();
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+  const menuDropdownRef = useRef(null);
 
   const getPageTitle = () => {
     switch (location.pathname) {
@@ -25,33 +37,64 @@ function Header({ search, setSearch }) {
         return 'Calendar';
       case '/analytics':
         return 'Analytics';
+      case '/about':
+        return 'About';
       default:
         return 'Tasks';
     }
   };
 
   useEffect(() => {
-    if (userId) {
-      fetch(`http://stride.ddns.net:8080/users/${userId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setUsername(data.name);
-        })
-        .catch((error) => console.error('Error fetching username:', error));
+    if (userId && creds) {
+      fetchUserDetails();
+      fetchTasks();
     }
+  }, [userId, creds]);
 
-    fetchTasksForToday();
-  }, [userId]);
-
-  const fetchTasksForToday = () => {
-    const today = new Date().toISOString().split('T')[0];
-    fetch(`http://stride.ddns.net:8080/tasks/parentIdIsNull?date=${today}&priority=1&parentId=null&isDone=false`)
+  const fetchUserDetails = () => {
+    fetch(`${API_BASE_URL}/users/${userId}`, {
+      headers: {
+        'Authorization': `Basic ${btoa(creds)}`
+      }
+    })
       .then((response) => response.json())
       .then((data) => {
-        setTasksForToday(data);
-        setTaskCount(data.length);
+        setUsername(data.name);
       })
-      .catch((error) => console.error('Error fetching tasks for today:', error));
+      .catch((error) => console.error('Error fetching username:', error));
+  };
+
+  const fetchTasks = () => {
+    fetch(`${API_BASE_URL}/tasks/parentIdIsNull?ownerId=${userId}&parentId=null`, {
+      headers: {
+        'Authorization': `Basic ${btoa(creds)}`
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTasks(data);
+        filterTasks(data);
+      })
+      .catch((error) => console.error('Error fetching tasks:', error));
+  };
+
+  const filterTasks = (tasks) => {
+    const today = new Date().toISOString().split('T')[0];
+    const overdue = [];
+    const todayTasks = [];
+
+    tasks.forEach((task) => {
+      const taskDate = new Date(task.finishDate).toISOString().split('T')[0];
+      if (taskDate < today && !task.isDone) {
+        overdue.push(task);
+      } else if (taskDate === today && !task.isDone) {
+        todayTasks.push(task);
+      }
+    });
+
+    setOverdueTasks(overdue);
+    setTasksForToday(todayTasks);
+    setTaskCount(overdue.length + todayTasks.length);
   };
 
   const toggleDropdown = () => {
@@ -62,9 +105,41 @@ function Header({ search, setSearch }) {
     setShowMenuDropdown(!showMenuDropdown);
   };
 
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+    setShowTaskView(true);
+  };
+
   const handleInput = (e) => {
     setSearch(e.target.value);
+    if (location.pathname !== '/main' && location.pathname !== '/tasks') {
+      navigate('/main');
+    }
   };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+        showDropdown
+      ) {
+        setShowDropdown(false);
+      }
+
+      if (
+        menuDropdownRef.current && !menuDropdownRef.current.contains(event.target) &&
+        showMenuDropdown
+      ) {
+        setShowMenuDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown, showMenuDropdown]);
 
   return (
     <header className="header">
@@ -84,13 +159,13 @@ function Header({ search, setSearch }) {
       <input
         type="text"
         className="header__input"
-        placeholder="Search task..."
+        placeholder="Search task or #tags..."
         onChange={handleInput}
         value={search}
       />
 
       <div className="header__profile">
-        <div className="header__notification-container">
+        <div className="header__notification-container" ref={dropdownRef}>
           <img
             src={notification}
             alt="notification"
@@ -100,27 +175,50 @@ function Header({ search, setSearch }) {
           {taskCount > 0 && (
             <div className="header__notification-badge">{taskCount}</div>
           )}
+          {showDropdown && (
+            <div className="header__dropdown">
+              <div className="list">Today's Tasks</div>
+              <ul>
+                {tasksForToday.map((task) => (
+                  <div className="list_item" key={task.id} onClick={() => handleTaskClick(task)}>
+                    {task.name}
+                  </div>
+                ))}
+              </ul>
+              <div className="list">Overdue Tasks</div>
+              <ul>
+                {overdueTasks.map((task) => (
+                  <div className="list_item" key={task.id} onClick={() => handleTaskClick(task)}>
+                    {task.name}
+                  </div>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
-        {showDropdown && (
-          <div className="header__dropdown">
-            <ul>
-              {tasksForToday.map((task) => (
-                <li key={task.id}>{task.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {username}
-        <img src={avatar} alt="avatar" className="header__avatar" width={50} height={50} onClick={toggleMenuDropdown} />
-        {showMenuDropdown && (
-          <div className="header__dropdown">
-            <h2><a href="/about">About Stride</a></h2>
-            <h2><a href="/">Log Out</a></h2>
-          </div>
-        )}
+        <span className="header__username" onClick={toggleMenuDropdown}>{username}</span>
+        <div className="header__avatar-container" ref={menuDropdownRef}>
+          <img src={avatar} alt="avatar" className="header__avatar" width={50} height={50}
+               onClick={toggleMenuDropdown}/>
+          {showMenuDropdown && (
+            <div className="header__dropdown">
+              <Link to="/about" className="dropdown_button">About Stride</Link>
+              <Link to="/" onClick={logout} className="dropdown_button">Log Out</Link>
+            </div>
+          )}
+        </div>
       </div>
+
+      {selectedTask && showTaskView && (
+        <TaskView
+          task={selectedTask}
+          onClose={() => {
+            setShowTaskView(false);
+            setSelectedTask(null);
+          }}
+        />
+      )}
     </header>
   );
 }

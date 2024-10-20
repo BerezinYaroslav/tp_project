@@ -1,10 +1,14 @@
 import React, {
-  useState, useEffect, useCallback, useMemo,
+  useState, useEffect, useCallback, useMemo, useContext,
 } from 'react';
 import TaskCreate from '../Popup/TaskCreate.jsx';
 import TaskView from '../Popup/TaskView.jsx';
+import API_BASE_URL from '../../config.js';
+import {UserContext} from "../App/UserContext.jsx";
 
-function Main({ ownerId, search }) {
+function Main({ search }) {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [tasks, setTasks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -25,11 +29,17 @@ function Main({ ownerId, search }) {
   };
 
   const fetchTasks = useCallback(() => {
-    fetch(`http://stride.ddns.net:8080/tasks/parentIdIsNull?owner_id=${ownerId}&parent_id=null&finish_date=${today.toISOString().split('T')[0]}&finish_date=${tomorrow.toISOString().split('T')[0]}`)
-      .then((response) => response.json())
-      .then((data) => setTasks(data))
-      .catch((error) => console.error('Error fetching tasks:', error));
-  }, [ownerId, today, tomorrow]);
+    if (creds) {
+      fetch(`${API_BASE_URL}/tasks/parentIdIsNull?ownerId=${userId}&parent_id=null&finish_date=${today.toISOString().split('T')[0]}&finish_date=${tomorrow.toISOString().split('T')[0]}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => setTasks(data))
+        .catch((error) => console.error('Error fetching tasks:', error));
+    }
+  }, [userId, today, tomorrow, creds]);
 
   useEffect(() => {
     fetchTasks();
@@ -41,10 +51,11 @@ function Main({ ownerId, search }) {
     const updatedTask = { ...task, isDone: updatedIsDone };
 
     try {
-      const response = await fetch('http://stride.ddns.net:8080/tasks', {
+      const response = await fetch(`${API_BASE_URL}/tasks?ownerId=${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(creds)}`
         },
         body: JSON.stringify(updatedTask),
       });
