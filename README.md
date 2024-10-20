@@ -27,9 +27,9 @@
 ## Презентация
 * Файл презентации [(pptx)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pptx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/presentation/Stride.pdf)
 * Видео презентации [(mov)](https://drive.google.com/file/d/1IURGl1AyIPHWT1BPiaZO87-Ok8Van2IW/view?usp=sharing)
-* Обзор финальной версии приложения [(mov)](https://drive.google.com/file/d/1q0OKG2Wun7taOwF_44DhJN0zDKYh46sf/view?usp=sharing)
-* Обзор бэкенда [(mov)](https://drive.google.com/file/d/1k2TvcajKWYWnFQJIPz0MDEZw2EcUkySd/view?usp=sharing)
-* Обзор фронтенда [(mov)](https://drive.google.com/file/d/1GbELHedeugn_1TjOww7I6EjVgxEHjFBM/view?usp=sharing)
+* Видеодемонстрация приложения [(mov)](https://drive.google.com/file/d/1q0OKG2Wun7taOwF_44DhJN0zDKYh46sf/view?usp=sharing)
+* Видеодемонстрация бэкенда [(mov)](https://drive.google.com/file/d/1k2TvcajKWYWnFQJIPz0MDEZw2EcUkySd/view?usp=sharing)
+* Видеодемонстрация фронтенда [(mov)](https://drive.google.com/file/d/1GbELHedeugn_1TjOww7I6EjVgxEHjFBM/view?usp=sharing)
 
 ## Ссылка на проект
 
