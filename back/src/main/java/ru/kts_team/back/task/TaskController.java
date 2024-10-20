@@ -61,8 +61,8 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasks() {
-        return service.getTasks();
+    public List<Task> getTasks(Long ownerId) {
+        return service.getTasks(ownerId);
     }
 
     @GetMapping(value = "/list", produces = {"application/json"})
@@ -82,8 +82,8 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByListId(@RequestParam Long listId) {
-        return service.getTasksByListId(listId);
+    public List<Task> getTasksByListId(@RequestParam Long listId, Long ownerId) {
+        return service.getTasksByListId(listId, ownerId);
     }
 
     @GetMapping(value = "/parent", produces = {"application/json"})
@@ -103,8 +103,8 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByParentId(@RequestParam Long parentId) {
-        return service.getTasksByParentId(parentId);
+    public List<Task> getTasksByParentId(@RequestParam Long parentId, Long ownerId) {
+        return service.getTasksByParentId(parentId, ownerId);
     }
 
     @GetMapping(value = "/isDone", produces = {"application/json"})
@@ -124,8 +124,8 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone) {
-        return service.getTasksByIsDone(isDone);
+    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone, Long ownerId) {
+        return service.getTasksByIsDone(isDone, ownerId);
     }
 
     @GetMapping(value = "/parentIdIsNull", produces = {"application/json"})
@@ -145,8 +145,8 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByParentIdIsNull() {
-        return service.getTasksByParentIdIsNull();
+    public List<Task> getTasksByParentIdIsNull(Long ownerId) {
+        return service.getTasksByParentIdIsNull(ownerId);
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
@@ -166,8 +166,8 @@ public class TaskController {
                             )
                     })
     })
-    public Task getTaskById(@PathVariable Long id) {
-        return service.getTaskById(id);
+    public Task getTaskById(@PathVariable Long id, Long ownerId) {
+        return service.getTaskById(id, ownerId);
     }
 
     @PutMapping(produces = {"application/json"})
@@ -187,8 +187,8 @@ public class TaskController {
                             )
                     })
     })
-    public Task updateTask(@RequestBody @Valid Task task) {
-        return service.updateTask(task);
+    public Task updateTask(@RequestBody @Valid Task task, Long ownerId) {
+        return service.updateTask(task, ownerId);
     }
 
     @DeleteMapping(produces = {"application/json"})

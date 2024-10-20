@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import ru.kts_team.back.task.Task;
 import ru.kts_team.back.task.TaskRepository;
 import ru.kts_team.back.task.TaskServiceImpl;
+import ru.kts_team.back.user.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,11 +31,18 @@ class TaskServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        User user = new User();
+        user.setId(1L);
+        user.setName("user");
+        user.setEmail("user@gmail.com");
+        user.setPassword("user");
+
         task = new Task();
         task.setId(1L);
         task.setName("Test Task");
         task.setCreationDate(new Date());
         task.setIsDone(false);
+        task.setOwner(user);
     }
 
     @Test
@@ -57,7 +65,7 @@ class TaskServiceTest {
         tasks.add(task);
         when(taskRepository.findAll()).thenReturn(tasks);
 
-        List<Task> result = taskService.getTasks();
+        List<Task> result = taskService.getTasks(1L);
 
         assertEquals(1, result.size());
         assertEquals(task.getName(), result.get(0).getName());
@@ -68,7 +76,7 @@ class TaskServiceTest {
     void getTaskById_ShouldReturnTask_WhenExists() {
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
 
-        Task result = taskService.getTaskById(1L);
+        Task result = taskService.getTaskById(1L, 1L);
 
         assertNotNull(result);
         assertEquals("Test Task", result.getName());
@@ -80,7 +88,7 @@ class TaskServiceTest {
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            taskService.getTaskById(1L);
+            taskService.getTaskById(1L, 1L);
         });
 
         String expectedMessage = "There is no a task with id 1";
@@ -103,7 +111,7 @@ class TaskServiceTest {
     void updateTask_ShouldReturnUpdatedTask() {
         when(taskRepository.save(task)).thenReturn(task);
 
-        Task result = taskService.updateTask(task);
+        Task result = taskService.updateTask(task, 1L);
 
         assertEquals(task.getName(), result.getName());
         verify(taskRepository, times(1)).save(task);

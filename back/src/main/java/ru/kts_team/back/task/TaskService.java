@@ -5,19 +5,19 @@ import java.util.List;
 public interface TaskService {
     Task addTask(Task task);
 
-    List<Task> getTasks();
+    List<Task> getTasks(Long ownerId);
 
-    List<Task> getTasksByListId(Long listId);
+    List<Task> getTasksByListId(Long listId, Long ownerId);
 
-    List<Task> getTasksByParentId(Long parentId);
+    List<Task> getTasksByParentId(Long parentId, Long ownerId);
 
-    List<Task> getTasksByIsDone(Boolean isDone);
+    List<Task> getTasksByIsDone(Boolean isDone, Long ownerId);
 
-    List<Task> getTasksByParentIdIsNull();
+    List<Task> getTasksByParentIdIsNull(Long ownerId);
 
-    Task getTaskById(Long id);
+    Task getTaskById(Long id, Long ownerId);
 
-    Task updateTask(Task task);
+    Task updateTask(Task task, Long ownerId);
 
     void deleteTasks();
 

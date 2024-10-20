@@ -29,55 +29,55 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getTasks() {
+    public List<Task> getTasks(Long ownerId) {
         log.info("Get tasks");
-        return repository.findAll();
+        return repository.findAllByOwner_Id(ownerId);
     }
 
     @Override
-    public List<Task> getTasksByListId(Long listId) {
+    public List<Task> getTasksByListId(Long listId, Long ownerId) {
         log.info("Get tasks where list id = {}", listId);
-        return repository.findAllByList_Id(listId);
+        return repository.findAllByList_IdAndOwner_Id(listId, ownerId);
     }
 
     @Override
-    public List<Task> getTasksByParentId(Long parentId) {
+    public List<Task> getTasksByParentId(Long parentId, Long ownerId) {
         log.info("Get tasks where parent id = {}", parentId);
-        return repository.findAllByParentId(parentId);
+        return repository.findAllByParentIdAndOwner_Id(parentId, ownerId);
     }
 
     @Override
-    public List<Task> getTasksByIsDone(Boolean isDone) {
+    public List<Task> getTasksByIsDone(Boolean isDone, Long ownerId) {
         log.info("Get tasks where is done = {}", isDone);
-        return repository.findAllByIsDone(isDone);
+        return repository.findAllByIsDoneAndOwner_Id(isDone, ownerId);
     }
 
     @Override
-    public List<Task> getTasksByParentIdIsNull() {
+    public List<Task> getTasksByParentIdIsNull(Long ownerId) {
         log.info("Get tasks where parent id is null");
-        return repository.findAllByParentIdIsNull();
+        return repository.findAllByParentIdIsNullAndOwner_Id(ownerId);
     }
 
     @Override
-    public Task getTaskById(Long id) {
+    public Task getTaskById(Long id, Long ownerId) {
         log.info("Get a task by id");
-        return repository.findById(id)
+        return repository.findByIdAndOwner_Id(id, ownerId)
                 .orElseThrow(() -> new RuntimeException("There is no a task with id " + id));
     }
 
     @Override
-    public Task updateTask(Task task) {
+    public Task updateTask(Task task, Long ownerId) {
         log.info("Update a task");
         Task updatedTask = repository.save(task);
 
         if (task.getParentId() != null) {
-            Task parentTask = getTaskById(task.getParentId());
-            List<Task> subtasks = getTasksByParentId(parentTask.getId());
+            Task parentTask = getTaskById(task.getParentId(), ownerId);
+            List<Task> subtasks = getTasksByParentId(parentTask.getId(), ownerId);
             log.info(subtasks.toString());
 
             if ((!subtasks.isEmpty()) && (subtasks.stream().allMatch(Task::getIsDone))) {
                 parentTask.setIsDone(true);
-                updateTask(parentTask);
+                updateTask(parentTask, ownerId);
             }
         }
 
