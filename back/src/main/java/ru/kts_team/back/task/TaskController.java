@@ -61,7 +61,7 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasks(Long ownerId) {
+    public List<Task> getTasks(@RequestParam Long ownerId) {
         return service.getTasks(ownerId);
     }
 
@@ -82,7 +82,7 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByListId(@RequestParam Long listId, Long ownerId) {
+    public List<Task> getTasksByListId(@RequestParam Long listId, @RequestParam Long ownerId) {
         return service.getTasksByListId(listId, ownerId);
     }
 
@@ -103,7 +103,7 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByParentId(@RequestParam Long parentId, Long ownerId) {
+    public List<Task> getTasksByParentId(@RequestParam Long parentId, @RequestParam Long ownerId) {
         return service.getTasksByParentId(parentId, ownerId);
     }
 
@@ -124,7 +124,7 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone, Long ownerId) {
+    public List<Task> getTasksByIsDone(@RequestParam Boolean isDone, @RequestParam Long ownerId) {
         return service.getTasksByIsDone(isDone, ownerId);
     }
 
@@ -145,7 +145,7 @@ public class TaskController {
                             )
                     })
     })
-    public List<Task> getTasksByParentIdIsNull(Long ownerId) {
+    public List<Task> getTasksByParentIdIsNull(@RequestParam Long ownerId) {
         return service.getTasksByParentIdIsNull(ownerId);
     }
 
@@ -166,7 +166,7 @@ public class TaskController {
                             )
                     })
     })
-    public Task getTaskById(@PathVariable Long id, Long ownerId) {
+    public Task getTaskById(@PathVariable Long id, @RequestParam Long ownerId) {
         return service.getTaskById(id, ownerId);
     }
 
@@ -187,7 +187,7 @@ public class TaskController {
                             )
                     })
     })
-    public Task updateTask(@RequestBody @Valid Task task, Long ownerId) {
+    public Task updateTask(@RequestBody @Valid Task task, @RequestParam Long ownerId) {
         return service.updateTask(task, ownerId);
     }
 
