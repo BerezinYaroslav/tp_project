@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByOwner_Id(Long ownerId);
 
+    List<Task> findAllByOwner_IdOrderByIdDesc(Long ownerId);
+
     Optional<Task> findByIdAndOwner_Id(Long taskId, Long ownerId);
 
     List<Task> findAllByList_IdAndOwner_Id(Long listId, Long ownerId);
