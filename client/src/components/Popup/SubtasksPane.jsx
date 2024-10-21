@@ -5,12 +5,29 @@ import {UserContext} from "../App/UserContext.jsx";
 
 function SubtasksPane({ taskId, parentFinishDate }) {
   const { userId } = useContext(UserContext);
-const { creds } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
   const [subtasks, setSubtasks] = useState([]);
   const [newSubtaskName, setNewSubtaskName] = useState('');
+  const [owner, setOwner] = useState(null);
+
+  const fetchUser = () => {
+    if (userId && creds) {
+      fetch(`${API_BASE_URL}/users/${userId}`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setOwner(data);
+        })
+        .catch((error) => console.error('Error fetching user:', error));
+    }
+  };
 
   // Fetch subtasks when component mounts
   useEffect(() => {
+    fetchUser();
     fetchSubtasks();
   }, [taskId]);
 
@@ -35,6 +52,7 @@ const { creds } = useContext(UserContext);
     if (!newSubtaskName) return;
 
     const newSubtask = {
+      owner: owner,
       name: newSubtaskName,
       parentId: taskId,
       finishDate: parentFinishDate,
@@ -44,7 +62,7 @@ const { creds } = useContext(UserContext);
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/tasks`, {
+      const response = await fetch(`${API_BASE_URL}/tasks?ownerId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,24 +85,25 @@ const { creds } = useContext(UserContext);
   // Toggle the 'isDone' state of a subtask
   const handleToggleSubtask = async (subtask) => {
     const updatedSubtask = { ...subtask, isDone: !subtask.isDone };
+    if (creds) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/tasks?ownerId=${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(creds)}`
+          },
+          body: JSON.stringify(updatedSubtask),
+        });
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/tasks`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa(creds)}`
-        },
-        body: JSON.stringify(updatedSubtask),
-      });
-
-      if (response.ok) {
-        fetchSubtasks(); // Refresh subtasks list
-      } else {
-        console.error('Error updating subtask');
+        if (response.ok) {
+          fetchSubtasks(); // Refresh subtasks list
+        } else {
+          console.error('Error updating subtask');
+        }
+      } catch (error) {
+        console.error('Error updating subtask:', error);
       }
-    } catch (error) {
-      console.error('Error updating subtask:', error);
     }
   };
 

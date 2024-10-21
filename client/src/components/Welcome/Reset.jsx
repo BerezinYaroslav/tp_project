@@ -29,7 +29,9 @@ function Reset() {
         login(userId);
         navigate('/tasks');
       } else {
-        console.error('Password reset failed');
+        const alert = await response.text();
+        window.alert(alert);
+        console.error(alert);
       }
     } catch (error) {
       console.error('Error:', error);

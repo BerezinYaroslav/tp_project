@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useContext, useCallback} from 'react';
 import TagCreate from './TagCreate';
+import TagManagement from './TagManagement'; // Import TagManagement
 import './TaskCreate.css';
 import API_BASE_URL from '../../config.js';
-import {UserContext} from '../App/UserContext.jsx';
+import { UserContext } from '../App/UserContext.jsx';
 
 function TaskCreate({ show, onClose, onTaskCreated }) {
   const { userId } = useContext(UserContext);
@@ -21,7 +22,9 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
   const [selectedTagId, setSelectedTagId] = useState('');
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
+  const [showTagManagement, setShowTagManagement] = useState(false); // State for tag management popup
 
+  // Fetch user details
   const fetchUser = () => {
     if (userId) {
       fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -70,14 +73,17 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     }
   }, [creds]);
 
-  // Handle new tag creation from TagCreate
   const handleTagCreated = (newTag) => {
-    setTags([...tags, newTag]); // Add new tag to available tags
-    setSelectedTags([...selectedTags, newTag]); // Also select it for the current task
+    setTags([...tags, newTag]);
+    setSelectedTags([...selectedTags, newTag]);
     setShowTagCreate(false);
   };
 
-  // Handle tag selection
+  const handleTagRemoved = (removedTagId) => {
+    setSelectedTags(selectedTags.filter(tag => tag.id !== removedTagId));
+    setTags(tags.filter(tag => tag.id !== removedTagId));
+  };
+
   const handleTagSelect = (e) => {
     const tagId = e.target.value;
     const selectedTag = tags.find((tag) => tag.id === parseInt(tagId));
@@ -86,7 +92,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
       setSelectedTags([...selectedTags, selectedTag]);
     }
 
-    // Reset the dropdown to "Select Tag" after a tag is selected
     setSelectedTagId('');
   };
 
@@ -114,7 +119,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     const taskData = {
       ...newTask,
       owner: owner,
-      taskTags: selectedTags, // Add selected tags to task
+      taskTags: selectedTags,
     };
     if (userId && creds) {
       fetch(`${API_BASE_URL}/tasks`, {
@@ -146,7 +151,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
         <h2 className="title">New Task</h2>
 
         <form onSubmit={handleSubmit} className="task-form">
-          {/* Date Field */}
           <label>Date</label>
           <input
             type="date"
@@ -156,7 +160,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             required
           />
 
-          {/* Task Name Field */}
           <label>Task</label>
           <input
             type="text"
@@ -166,7 +169,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             required
           />
 
-          {/* Task Description Field */}
           <label>Comments</label>
           <textarea
             name="description"
@@ -174,13 +176,15 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
           />
 
-          {/* List Selection */}
           <label>List</label>
           <div className="input-with-button">
             <select
               name="list"
               value={newTask.list?.id || ''}
-              onChange={handleListSelect}
+              onChange={(e) => setNewTask({
+                ...newTask,
+                list: lists.find(list => list.id === parseInt(e.target.value))
+              })}
             >
               <option value="">Select List</option>
               {lists.map((list) => (
@@ -189,7 +193,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             </select>
           </div>
 
-          {/* Tag Management */}
           <label>Tags</label>
           <div className="tags-container">
             {selectedTags.map((tag) => (
@@ -226,9 +229,15 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
             <button type="button" className="tags-button" onClick={() => setShowTagCreate(true)}>
               New Tag
             </button>
+            <button
+              type="button"
+              className="tags-button"
+              onClick={() => setShowTagManagement(true)}
+            >
+              Manage Tags
+            </button>
           </div>
 
-          {/* Submit Button */}
           <button type="submit" className="submit-button">Add Task</button>
         </form>
 
@@ -237,6 +246,19 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
           <div className="popup">
             <div className="popup-content">
               <TagCreate onTagCreated={handleTagCreated} onClose={() => setShowTagCreate(false)} />
+            </div>
+          </div>
+        )}
+
+        {/* Tag Management Popup */}
+        {showTagManagement && (
+          <div className="popup">
+            <div className="popup-content">
+              <TagManagement
+                tags={tags}
+                onTagRemoved={handleTagRemoved}
+                onClose={() => setShowTagManagement(false)}
+              />
             </div>
           </div>
         )}
