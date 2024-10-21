@@ -75,7 +75,10 @@ function Lists() {
             <div key={list.id} className="list-item" onClick={() => handleListClick(list.id)}>
               <span>{list.name}</span>
               {/* Delete button */}
-              <button className="delete-list-button" onClick={() => deleteList(list.id)}>
+              <button className="delete-list-button"   onClick={(event) => {
+                event.stopPropagation();
+                deleteList(list.id);
+              }}>
                 Delete
               </button>
             </div>
