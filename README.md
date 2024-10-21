@@ -17,7 +17,7 @@
 
 ## Документация
 * Техническое задание [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Техническое%20задание.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Техническое%20задание.pdf)
-* Курсовой проект [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.pdf)
+* Курсовой проект [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Курсовой%20проект.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/%D0%9A%D1%83%D1%80%D1%81%D0%BE%D0%B2%D0%BE%D0%B8%CC%86%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82.pdf)
 * Перечень задач [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Перечень%20задач.pdf)
 * Сопроводительное письмо [(docx)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.docx) [(pdf)](https://github.com/BerezinYaroslav/tp_project/blob/master/documentation/Сопроводительное%20письмо.pdf)
 
