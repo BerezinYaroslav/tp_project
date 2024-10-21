@@ -38,7 +38,9 @@ function Register() {
         navigate('/tasks');
       } else {
         logout();
-        console.error('Registration failed');
+        const alert = await response.text();
+        window.alert(alert);
+        console.error(alert);
       }
     } catch (error) {
       console.error('Error:', error);

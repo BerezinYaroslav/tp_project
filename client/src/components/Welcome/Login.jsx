@@ -37,7 +37,9 @@ function Login() {
         navigate('/tasks'); // Redirect to tasks page
       } else {
         logout();
-        console.error('Login failed');
+        const alert = await response.text();
+        window.alert(alert);
+        console.error(alert);
       }
     } catch (error) {
       console.error('Error:', error);
