@@ -140,7 +140,7 @@ class TagServiceTest {
 
         TaskTag result = taskTagService.updateTag(taskTag);
 
-        assertEquals(1L, result.getId());  // Проверяем, что ID не изменился
+        assertEquals(1L, result.getId());  // Проверяем, чтo ID не изменился
         verify(taskTagRepository, times(1)).save(taskTag);
     }
 
