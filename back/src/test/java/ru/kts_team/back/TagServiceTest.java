@@ -133,4 +133,15 @@ class TagServiceTest {
 
         verify(taskTagRepository, times(1)).deleteAll();
     }
+
+    @Test
+    void updateTag_ShouldNotChangeId_WhenUpdated() {
+        when(taskTagRepository.save(taskTag)).thenReturn(taskTag);
+
+        TaskTag result = taskTagService.updateTag(taskTag);
+
+        assertEquals(1L, result.getId());  // Проверяем, что ID не изменился
+        verify(taskTagRepository, times(1)).save(taskTag);
+    }
+
 }

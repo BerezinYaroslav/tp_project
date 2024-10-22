@@ -118,4 +118,15 @@ class ListServiceTest {
 
         verify(taskListRepository, times(1)).deleteAll();
     }
+
+    @Test
+    void updateList_ShouldNotChangeId_WhenUpdated() {
+        when(taskListRepository.save(taskList)).thenReturn(taskList);
+
+        TaskList result = taskListService.updateList(taskList);
+
+        assertEquals(1L, result.getId());  // Проверка, что ID не изменился
+        verify(taskListRepository, times(1)).save(taskList);
+    }
+
 }
