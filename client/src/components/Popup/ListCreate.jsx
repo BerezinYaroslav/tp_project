@@ -12,7 +12,6 @@ function ListCreate({ show, onClose, onListCreated }) {
   const [owner, setOwner] = useState(null);
 
   useEffect(() => {
-    // Fetch the owner (current user) details when component mounts
     if (userId && creds) {
       fetch(`${API_BASE_URL}/users/${userId}`, {
         headers: {
@@ -43,20 +42,22 @@ function ListCreate({ show, onClose, onListCreated }) {
         owner,  // Attach the owner (user) object to the list
       };
 
-      fetch(`${API_BASE_URL}/lists`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa(creds)}`
-        },
-        body: JSON.stringify(listData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          onListCreated();  // Notify the parent component about list creation
-          setNewList({ name: '', owner: null });  // Reset the form
+      if (creds && userId) {
+        fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(creds)}`
+          },
+          body: JSON.stringify(listData),
         })
-        .catch((error) => console.error('Error creating list:', error));
+          .then((response) => response.json())
+          .then((data) => {
+            onListCreated();  // Notify the parent component about list creation
+            setNewList({name: '', owner: null});  // Reset the form
+          })
+          .catch((error) => console.error('Error creating list:', error));
+      }
     }
   };
 
@@ -71,8 +72,7 @@ function ListCreate({ show, onClose, onListCreated }) {
         <h2>Create New List</h2>
         <form onSubmit={handleSubmit}>
           <label>
-            List Name:
-            <input
+            List Name: <input
               type="text"
               name="name"
               value={newList.name}

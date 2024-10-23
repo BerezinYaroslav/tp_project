@@ -46,6 +46,7 @@
 }
 
 .tag-popup form input[type="color"] {
+  height: 35px;
   width: 50px;
   padding: 5px;
   margin-left: 10px;
@@ -59,6 +60,18 @@
 }
 
 .tag-popup button {
+  background-color: #ffcc00;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button_submit {
+  width: 100%;
   background-color: #ffcc00;
   border: none;
   color: white;
@@ -119,4 +132,19 @@
 
 .tags-delete-button:hover {
   filter: brightness(90%);
+}
+
+.tags-container-scroll-man {
+  max-height: 200px; /* Adjust to fit roughly 5 rows of tags */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  padding: 10px; /* Optional: add padding for better spacing */
+  border: 1px solid #ddd; /* Optional: add a border for better visual distinction */
+  border-radius: 5px; /* Optional: rounded corners */
+  background-color: #fff; /* Background color for better contrast */
+}
+
+.tag-row {
+  display: flex;
+  justify-content: left;
+  gap: 20px;
 }

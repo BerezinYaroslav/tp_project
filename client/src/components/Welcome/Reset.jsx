@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './Weclome.css';
 import API_BASE_URL from '../../config.js';
 import { UserContext } from '../App/UserContext.jsx';
@@ -67,6 +67,9 @@ function Reset() {
               required
             />
             <button type="submit">Reset Password</button>
+            <div className="register-link">
+              <p><Link to="/login">Back to Login</Link></p>
+            </div>
           </form>
         </div>
       </div>

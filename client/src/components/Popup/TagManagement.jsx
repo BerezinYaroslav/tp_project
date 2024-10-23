@@ -48,7 +48,7 @@ function TagManagement({ onTagRemoved, onClose }) {
     <div className="tag-popup-overlay-man">
       <div className="tag-popup-man">
         <h2>Manage Tags</h2>
-        <div className="tags-container">
+        <div className="tags-container-scroll-man">
           {tags.map((tag) => (
             <div key={tag.id} className="task-tag" style={{ backgroundColor: tag.color }}>
               #{tag.name}

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './Weclome.css'; // Import the new CSS file
 import API_BASE_URL from '../../config.js';
 import { UserContext } from '../App/UserContext.jsx'; // Import UserContext
@@ -87,6 +87,9 @@ function Register() {
               required
             />
             <button type="submit">Confirm</button>
+            <div className="register-link">
+              <p><Link to="/login">Back to Login</Link></p>
+            </div>
           </form>
         </div>
       </div>

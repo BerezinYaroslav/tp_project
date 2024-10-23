@@ -3,7 +3,7 @@
 }
 
 .subtasks-list {
-  max-height: 100px;
+  max-height: 90px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;

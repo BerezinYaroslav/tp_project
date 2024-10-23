@@ -46,7 +46,7 @@ function TagCreate({ onTagCreated, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (creds) {
+    if (creds && userId) {
       fetch(`${API_BASE_URL}/tags`, {
         method: 'POST',
         headers: {
@@ -71,7 +71,9 @@ function TagCreate({ onTagCreated, onClose }) {
       <div className="tag-popup">
         <h2>Create a New Tag</h2>
         <form onSubmit={handleSubmit}>
-          <label>Tag Name:</label>
+          <div className="tag-row">
+            <div className="col-12">
+          <label>Tag Name</label>
           <input
             type="text"
             name="name"
@@ -79,20 +81,19 @@ function TagCreate({ onTagCreated, onClose }) {
             onChange={handleInputChange}
             required
           />
-
-          <label>Color:</label>
+            </div>
+          <div className="col-12">
+          <label>Color</label>
           <input
             type="color"
             name="color"
             value={newTag.color}
             onChange={handleInputChange}
           />
-
+          </div>
+          </div>
           <div className="button-group">
-            <button type="submit">Create Tag</button>
-            <button type="button" className="cancel-button" onClick={onClose}>
-              Cancel
-            </button>
+            <button type="submit" className="button_submit">Create Tag</button>
           </div>
         </form>
         <button className="close-button" onClick={onClose}>Close</button>

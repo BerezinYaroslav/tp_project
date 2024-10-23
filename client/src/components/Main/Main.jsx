@@ -45,6 +45,11 @@ function Main({ search }) {
     fetchTasks();
   }, [fetchTasks]);
 
+  const handleTaskChange = () => {
+    fetchTasks();
+    setShowTaskView(false);
+  };
+
   const handleFinishedChange = async (e, task) => {
     e.stopPropagation();
     const updatedIsDone = !task.isDone;
@@ -153,11 +158,15 @@ function Main({ search }) {
         </div>
       ))}
       <TaskCreate show={showPopup} onClose={() => setShowPopup(false)} onTaskCreated={handleTaskCreated} />
-      {selectedTask && (
-        <>
-          {showTaskView && <TaskView show={showTaskView} task={selectedTask} onClose={() => setShowTaskView(false)} />}
-        </>
+      {selectedTask && showTaskView && (
+        <TaskView
+          show={showTaskView}
+          task={selectedTask}
+          onClose={() => setShowTaskView(false)}
+          onChange={handleTaskChange}
+        />
       )}
+
     </main>
   );
 }

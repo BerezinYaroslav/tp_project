@@ -133,7 +133,7 @@ function SubtasksPane({ taskId, parentFinishDate }) {
 
       {/* Scrollable Subtasks List */}
       <div className="subtasks-list">
-        {subtasks.length === 0 && <p>No subtasks available.</p>}
+        {subtasks.length === 0 && <p>No subtasks</p>}
         {subtasks.map((subtask) => (
           <div key={subtask.id} className="subtask-item">
             <input
@@ -164,7 +164,7 @@ function SubtasksPane({ taskId, parentFinishDate }) {
           onChange={(e) => setNewSubtaskName(e.target.value)}
           placeholder="New subtask name"
         />
-        <button type="button" onClick={handleCreateSubtask}>
+        <button type="button" className="tags-button" onClick={handleCreateSubtask}>
           Add Subtask
         </button>
       </div>

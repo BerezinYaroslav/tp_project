@@ -12,8 +12,10 @@ function AnalyticsPage() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    if (creds && userId) {
+      fetchTasks();
+    }
+  }, [creds, userId]);
 
   const fetchTasks = async () => {
     try {
@@ -72,7 +74,7 @@ function AnalyticsPage() {
     labels: Object.keys(tasksPerDay),
     datasets: [
       {
-        label: 'Tasks Completed',
+        label: 'Completed Tasks',
         data: Object.values(tasksPerDay),
         backgroundColor: ['#77DD77', '#77DD77', '#77DD77', '#77DD77', '#77DD77', '#77DD77', '#77DD77'],
       },
@@ -110,7 +112,7 @@ function AnalyticsPage() {
     <div className="analytics-page">
       {/* Left section for Bar Chart */}
       <div className="analytics-left">
-        <h2>Completed tasks</h2>
+        <h2>Week Completion</h2>
         <p>{`${startOfWeek.toLocaleDateString()} - ${endOfWeek.toLocaleDateString()}`}</p>
         {' '}
         {/* Display current week range */}
@@ -119,7 +121,7 @@ function AnalyticsPage() {
 
       {/* Right section for Pie Chart */}
       <div className="analytics-right">
-        <h2>Task Completion</h2>
+        <h2>Total Completion</h2>
         <div className="chart-container">
           <Pie data={pieChartData} />
         </div>

@@ -5,7 +5,7 @@ import {
 import Header from '../Header/Header.jsx';
 import Sidebar from '../Sidebar/Sidebar.jsx';
 import Main from '../Main/Main.jsx';
-import Calendar from '../Calendar/CalendarPage.jsx';
+import Calendar from '../Calendar/Calendar.jsx';
 import Lists from '../Lists/Lists.jsx';
 import ListTasks from '../Lists/ListsTasks.jsx';
 import AnalyticsPage from '../Analytics/AnalyticsPage.jsx';

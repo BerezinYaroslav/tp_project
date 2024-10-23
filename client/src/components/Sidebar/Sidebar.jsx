@@ -37,7 +37,7 @@ function Sidebar() {
             fill="black"
           />
         </svg>
-        Analytic
+        Analytics
       </Link>
       <Link
         to="/calendar"

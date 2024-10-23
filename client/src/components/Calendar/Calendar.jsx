@@ -1,45 +1,75 @@
-import React, { useState } from 'react';
-import TaskCreate from '../Popup/TaskCreate.jsx';
+import React, { useState, useEffect, useContext } from 'react';
 import TaskView from '../Popup/TaskView.jsx';
+import TaskCreateWithDate from '../Popup/TaskCreateWithDate.jsx';
+import API_BASE_URL from '../../config.js';
+import { UserContext } from "../App/UserContext.jsx";
 
-function Calendar({ tasks }) {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
+function Calendar({ onTaskChange }) {
+  const { userId } = useContext(UserContext);
+  const { creds } = useContext(UserContext);
+  const [tasks, setTasks] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskView, setShowTaskView] = useState(false);
+  const [showTaskCreateWithDate, setShowTaskCreateWithDate] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const getMonthName = (monthIndex) => {
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
-    ];
-    return monthNames[monthIndex];
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/parentIdIsNull?ownerId=${userId}&parentId=null`, {
+        headers: {
+          'Authorization': `Basic ${btoa(creds)}`
+        }
+      });
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
   };
 
-  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+  const handleChange = () => {
+    if (creds && userId) {
+      fetchTasks();
+    }
+  };
 
-  const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay() // Sunday = 0, Monday = 1, etc.
-  ;
+  useEffect(() => {
+    if (creds && userId) {
+      fetchTasks();
+    }
+  }, [creds, userId, currentMonth, currentYear]);
+
+  const handleMonthChange = (offset) => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev); // Create a copy of the current date
+      newDate.setMonth(newDate.getMonth() + offset); // Adjust the month
+      return newDate;
+    });
+  };
+
+  const handleYearChange = (offset) => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev); // Create a copy of the current date
+      newDate.setFullYear(newDate.getFullYear() + offset); // Adjust the year
+      return newDate;
+    });
+  };
 
   const generateCalendar = () => {
-    const daysInMonth = getDaysInMonth(currentMonth, currentYear);
-    const firstDay = getFirstDayOfMonth(currentMonth, currentYear) || 7; // Ensure Sunday is treated as 7 for proper layout
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay() || 7;
     const days = [];
     let day = 1;
-
-    // Adjust the grid to only include the required number of rows
-    const totalCells = Math.ceil((daysInMonth + (firstDay - 1)) / 7) * 7; // Total number of cells needed
+    const totalCells = Math.ceil((daysInMonth + (firstDay - 1)) / 7) * 7;
 
     for (let i = 1; i <= totalCells; i++) {
-      if (i < firstDay) {
-        // Empty cells before the first day of the month
-        days.push(null);
-      } else if (day > daysInMonth) {
-        // Empty cells after the last day of the month
+      if (i < firstDay || day > daysInMonth) {
         days.push(null);
       } else {
-        // Days of the current month
         days.push(day++);
       }
     }
@@ -64,55 +94,82 @@ function Calendar({ tasks }) {
     return weeks.map((week, index) => (
       <div key={index} className="calendar-week">
         {week.map((day, dayIndex) => (
-          <div key={dayIndex} className={`calendar-day ${day === currentDate.getDate() ? 'current-day' : ''}`}>
+          <div
+            key={dayIndex}
+            className={`calendar-day ${day === currentDate.getDate() ? 'current-day' : ''}`}
+            onClick={() => day && handleDayClick(day)}
+          >
             {day}
-            {day && tasks
-              .filter((task) => {
-                const taskDate = new Date(task.finishDate);
-                return taskDate.getDate() === day && taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear;
-              })
-              .map((task) => (
-                <div
-                  key={task.id}
-                  className="task-item"
-                  onClick={() => {
-                    setSelectedTask(task);
-                    setShowTaskView(true);
-                  }}
-                >
-                  {task.name}
-                </div>
-              ))}
+            {day && renderTasksForDay(day)}
           </div>
         ))}
       </div>
     ));
   };
 
-  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const handleDayClick = (day) => {
+    const date = new Date(currentYear, currentMonth, day);
+    setSelectedDate(date);
+    setShowTaskCreateWithDate(true);
+  };
+
+  const renderTasksForDay = (day) => {
+    return tasks
+      .filter((task) => {
+        const taskDate = new Date(task.finishDate);
+        return taskDate.getDate() === day && taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear;
+      })
+      .map((task) => (
+        <div
+          key={task.id}
+          className="task-item"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent day click
+            setSelectedTask(task);
+            setShowTaskView(true);
+          }}
+        >
+          {task.name}
+        </div>
+      ));
+  };
+
+  const handleTaskCreated = () => {
+    fetchTasks();
+    setShowTaskCreateWithDate(false);
+  };
 
   return (
     <div className="calendar">
       <div className="calendar-header">
-        <h2>
-          {getMonthName(currentMonth)}
-          {' '}
-          {currentYear}
-        </h2>
+        <h2>{currentDate.toLocaleString('en-GB', {month: 'long'})} {currentYear}</h2>
+        <button onClick={() => handleYearChange(-1)}>&lt;&lt;</button>
+        <button onClick={() => handleMonthChange(-1)}>&lt;</button>
+        <button onClick={() => handleMonthChange(1)}>&gt;</button>
+        <button onClick={() => handleYearChange(1)}>&gt;&gt;</button>
       </div>
       <div className="weekdays">
-        {weekdays.map((weekday, index) => (
+        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((weekday, index) => (
           <div key={index} className="weekday">{weekday}</div>
         ))}
       </div>
       <div className="calendar-grid">
         {renderCalendar()}
       </div>
-      {showTaskView && (
+      {showTaskView && selectedTask && (
         <TaskView
-          show={showTaskView}
           task={selectedTask}
           onClose={() => setShowTaskView(false)}
+          onTaskChange={onTaskChange}
+          onChange={handleChange}
+        />
+      )}
+      {showTaskCreateWithDate && selectedDate && (
+        <TaskCreateWithDate
+          show={showTaskCreateWithDate}
+          onClose={() => setShowTaskCreateWithDate(false)}
+          onTaskCreated={handleTaskCreated}
+          initialDate={selectedDate} // Pass the selected date to pre-fill the TaskCreate form
         />
       )}
     </div>

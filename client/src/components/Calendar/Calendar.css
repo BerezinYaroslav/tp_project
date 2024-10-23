@@ -17,10 +17,12 @@
 }
 
 .calendar-grid {
+  width: 1000px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .calendar-week {
@@ -102,4 +104,14 @@
 
 .task-item:hover {
   filter: brightness(90%);
+}
+
+.calendar-header button {
+  width: 50px;
+  height: 25px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  background-color: #f1c40f;
+  border-radius: 5px;
+  border: none;
 }

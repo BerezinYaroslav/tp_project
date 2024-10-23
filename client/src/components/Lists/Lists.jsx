@@ -12,7 +12,6 @@ function Lists() {
   const navigate = useNavigate();
 
   const fetchLists = async () => {
-    if (creds) {
       try {
         const response = await fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
           headers: {
@@ -24,12 +23,13 @@ function Lists() {
       } catch (error) {
         console.error('Error fetching lists:', error);
       }
-    }
   };
 
   useEffect(() => {
+    if (creds && userId) {
       fetchLists();
-  }, []);
+    }
+  }, [creds, userId]);
 
   const handleListCreated = () => {
     fetchLists();
@@ -37,28 +37,27 @@ function Lists() {
   };
 
   const handleListClick = (listId) => {
-    navigate(`/list-tasks/${listId}`); // Navigate to the proper route with listId as a parameter
+    navigate(`/list-tasks/${listId}`);
   };
 
   const deleteList = async (listId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this list?');
-    if (!confirmDelete) return;
+    if (creds) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/lists/${listId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Basic ${btoa(creds)}`
+          }
+        });
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/lists/${listId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Basic ${btoa(creds)}`
+        if (response.ok) {
+          setLists(lists.filter((list) => list.id !== listId));
+        } else {
+          console.error('Error deleting list');
         }
-      });
-
-      if (response.ok) {
-        setLists(lists.filter((list) => list.id !== listId));
-      } else {
-        console.error('Error deleting list');
+      } catch (error) {
+        console.error('Error deleting list:', error);
       }
-    } catch (error) {
-      console.error('Error deleting list:', error);
     }
   };
 

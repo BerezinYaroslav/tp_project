@@ -25,16 +25,23 @@
 }
 
 .task-form input,
-.task-form select,
+.task-form select{
+  width: 96%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 .task-form textarea {
-  width: 90%;
+  overflow-y: auto;
+  resize: none;
+  width: 96%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .task-form input[type="date"] {
-  width: 30%;
+  width: 50%;
 }
 
 .tags-container {
@@ -62,10 +69,11 @@
 
 .tags-button {
   background-color: #ffcc00;
-  border: none;
   margin-right: 5px;
-  padding: 10px 20px;
-  width: 41%;
+  padding: 5px 10px;
+  border: none;
+  width: 160px;
+  height: 37px;
   color: white;
   cursor: pointer;
   border-radius: 5px;
@@ -125,16 +133,15 @@
 .row {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
 }
 
 .input-group {
   width: 48%;
 }
 
-.task-form input[type="date"],
-.task-form select {
-  width: 85%;
+.task-form select [name="list"] {
+  width: auto;
 }
 
 .task-form label {
@@ -144,4 +151,14 @@
 
 .task-view-popup {
   width: 450px;
+}
+
+.tags-container-scroll {
+  max-height: 35px; /* Adjust this value to fit roughly 2 rows of tags */
+  overflow-y: auto; /* Enable vertical scrolling when content exceeds the height */
+  padding: 5px; /* Optional: Add padding for better spacing */
+  border: 1px solid #ddd; /* Optional: Add a border for better visual distinction */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #fff; /* Background color for better contrast */
+  margin-bottom: 5px;
 }

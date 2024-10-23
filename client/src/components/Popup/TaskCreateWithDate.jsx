@@ -1,19 +1,19 @@
-import React, {useState, useEffect, useContext, useCallback} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import TagCreate from './TagCreate';
-import TagManagement from './TagManagement'; // Import TagManagement
+import TagManagement from './TagManagement';
 import './TaskCreate.css';
 import API_BASE_URL from '../../config.js';
 import { UserContext } from '../App/UserContext.jsx';
 import ListCreate from "./ListCreate.jsx";
 
-function TaskCreate({ show, onClose, onTaskCreated }) {
+function TaskCreateWithDate({ show, onClose, onTaskCreated, initialDate }) {
   const { userId } = useContext(UserContext);
   const { creds } = useContext(UserContext);
   const [newTask, setNewTask] = useState({
     owner: null,
     name: '',
     description: '',
-    finishDate: '',
+    finishDate: initialDate.toISOString().split('T')[0], // Use initialDate for pre-filled date
     taskTags: [],
     list: null,
   });
@@ -23,10 +23,9 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
   const [selectedTagId, setSelectedTagId] = useState('');
   const [lists, setLists] = useState([]);
   const [showTagCreate, setShowTagCreate] = useState(false);
+  const [showTagManagement, setShowTagManagement] = useState(false);
   const [showListCreate, setShowListCreate] = useState(false);
-  const [showTagManagement, setShowTagManagement] = useState(false); // State for tag management popup
 
-  // Fetch user details
   const fetchUser = () => {
     if (userId) {
       fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -41,16 +40,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
         .catch((error) => console.error('Error fetching user:', error));
     }
   };
-
-  const handleListCreated = (createdList) => {
-    setLists([...lists, createdList]);
-    setNewTask((prevTask) => ({
-      ...prevTask,
-      list: createdList,
-    }));
-    setShowListCreate(false); // Close the popup after creating a list
-  };
-
 
   useEffect(() => {
     if (creds) {
@@ -75,15 +64,17 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
         .catch((error) => console.error('Error fetching lists:', error));
 
       fetchUser();
-
-      // Automatically set default task date to today
-      const today = new Date().toISOString().split('T')[0];
-      setNewTask((prevTask) => ({
-        ...prevTask,
-        finishDate: today,
-      }));
     }
   }, [creds]);
+
+  const handleListCreated = (createdList) => {
+    setLists([...lists, createdList]);
+    setNewTask((prevTask) => ({
+      ...prevTask,
+      list: createdList,
+    }));
+    setShowListCreate(false);
+  };
 
   const handleTagCreated = (newTag) => {
     setTags([...tags, newTag]);
@@ -107,12 +98,10 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     setSelectedTagId('');
   };
 
-  // Handle tag removal
   const handleRemoveTag = (tagId) => {
     setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
   };
 
-  // Handle list selection
   const handleListSelect = (e) => {
     const listId = e.target.value;
     const selectedList = lists.find((list) => list.id === parseInt(listId));
@@ -120,12 +109,11 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     if (selectedList) {
       setNewTask((prevTask) => ({
         ...prevTask,
-        list: selectedList, // Store the selected list object in newTask
+        list: selectedList,
       }));
     }
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const taskData = {
@@ -150,15 +138,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
           console.error('Error:', error);
         });
     }
-    const today = new Date().toISOString().split('T')[0];
-    setNewTask({
-      owner: null,
-      name: '',
-      description: '',
-      finishDate: today,
-      taskTags: [],
-      list: null,
-    });
   };
 
   if (!show) {
@@ -169,17 +148,10 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
     <div className="popup">
       <div className="popup-content">
         <span className="close-button" onClick={onClose}>Close</span>
+        <h2>{initialDate.toString().split('00')[0]}</h2>
         <h2 className="title">New Task</h2>
 
         <form onSubmit={handleSubmit} className="task-form">
-          <label>Date</label>
-          <input
-            type="date"
-            name="finishDate"
-            value={newTask.finishDate}
-            onChange={(e) => setNewTask({ ...newTask, finishDate: e.target.value })}
-            required
-          />
 
           <label>Task</label>
           <input
@@ -235,8 +207,7 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
                 className="task-tag"
                 style={{ backgroundColor: tag.color }}
               >
-                #
-                {tag.name}
+                #{tag.name}
                 {' '}
                 <button
                   type="button"
@@ -275,7 +246,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
           <button type="submit" className="submit-button">Add Task</button>
         </form>
 
-        {/* Tag Create Popup */}
         {showTagCreate && (
           <div className="popup">
             <div className="popup-content">
@@ -284,7 +254,6 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
           </div>
         )}
 
-        {/* Tag Management Popup */}
         {showTagManagement && (
           <div className="popup">
             <div className="popup-content">
@@ -301,4 +270,4 @@ function TaskCreate({ show, onClose, onTaskCreated }) {
   );
 }
 
-export default TaskCreate;
+export default TaskCreateWithDate;

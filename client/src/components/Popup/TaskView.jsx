@@ -2,11 +2,12 @@ import React, {useState, useEffect, useContext} from 'react';
 import TagCreate from './TagCreate';
 import SubtasksPane from './SubtasksPane';
 import TagManagement from "./TagManagement.jsx";
+import ListCreate from "./ListCreate.jsx";
 import './TaskView.css';
 import API_BASE_URL from '../../config.js';
 import {UserContext} from "../App/UserContext.jsx";
 
-function TaskView({ task, onClose }) {
+function TaskView({ task, onClose, onChange }) {
   const { userId } = useContext(UserContext);
   const { creds } = useContext(UserContext);
   const [editedTask, setEditedTask] = useState({ ...task });
@@ -14,19 +15,14 @@ function TaskView({ task, onClose }) {
   const [allTags, setAllTags] = useState([]);
   const [selectedTagId, setSelectedTagId] = useState('');
   const [lists, setLists] = useState([]);
+  const [showListCreate, setShowListCreate] = useState(false);
+  const [newlyCreatedList, setNewlyCreatedList] = useState(null);
   const [showTagCreate, setShowTagCreate] = useState(false);
   const [showTagManagement, setShowTagManagement] = useState(false); // State for tag management popup
 
   useEffect(() => {
     if (creds) {
-      fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
-        headers: {
-          'Authorization': `Basic ${btoa(creds)}`
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => setLists(data))
-        .catch((error) => console.error('Error fetching lists:', error));
+      fetchLists();
 
       fetch(`${API_BASE_URL}/tags?ownerId=${userId}`, {
         headers: {
@@ -38,6 +34,29 @@ function TaskView({ task, onClose }) {
         .catch((error) => console.error('Error fetching tags:', error));
     }
   }, [creds]);
+
+  const fetchLists = () => {
+    fetch(`${API_BASE_URL}/lists?ownerId=${userId}`, {
+      headers: {
+        'Authorization': `Basic ${btoa(creds)}`
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setLists(data);
+        if (newlyCreatedList) {
+          const createdList = data.find(list => list.id === newlyCreatedList.id);
+          if (createdList) {
+            setEditedTask((prev) => ({
+              ...prev,
+              list: createdList
+            }));
+          }
+          setNewlyCreatedList(null);
+        }
+      })
+      .catch((error) => console.error('Error fetching lists:', error));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,7 +99,7 @@ function TaskView({ task, onClose }) {
 
       if (response.ok) {
         onClose();
-        window.location.reload();
+        onChange();
       }
     } catch (error) {
       console.error('Error updating task:', error);
@@ -97,7 +116,7 @@ function TaskView({ task, onClose }) {
       });
       if (response.ok) {
         onClose();
-        window.location.reload();
+        onChange();
       } else {
         console.error('Error deleting task');
       }
@@ -117,34 +136,42 @@ function TaskView({ task, onClose }) {
     setAllTags(allTags.filter(tag => tag.id !== removedTagId));
   };
 
+  const handleListCreated = (createdList) => {
+    setNewlyCreatedList(createdList); // Store the new list to select it after fetching
+    fetchLists(); // Refresh the lists to include the new one
+    setShowListCreate(false); // Close the ListCreate popup
+  };
+
   return (
     <div className="popup-overlay">
       <div className="task-view-popup">
         <form className="task-form" onSubmit={handleSubmitEdit}>
           <h2>
-            <label>Task</label>
-            <input
-              type="text"
-              name="name"
-              value={editedTask.name}
-              onChange={handleChange}
-              required
-            />
+            <div className="row">
+              <div className="input-group">
+                <label>Task</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={editedTask.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label> </label>
+                <input
+                  type="date"
+                  name="finishDate"
+                  value={new Date(editedTask.finishDate).toISOString().split('T')[0]}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
           </h2>
 
-          {/* Date and List */}
           <div className="row">
-            <div className="input-group">
-              <label>Date</label>
-              <input
-                type="date"
-                name="finishDate"
-                value={new Date(editedTask.finishDate).toISOString().split('T')[0]}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
             <div className="input-group">
               <label>List</label>
               <select
@@ -158,7 +185,7 @@ function TaskView({ task, onClose }) {
                   },
                 })}
               >
-                <option value="">Select</option>
+                <option value="">None</option>
                 {lists.map((list) => (
                   <option key={list.id} value={list.id}>
                     {list.name}
@@ -166,10 +193,19 @@ function TaskView({ task, onClose }) {
                 ))}
               </select>
             </div>
+            <div className="input-group">
+              <label> </label>
+              <button
+                type="button"
+                className="tags-button"
+                onClick={() => setShowListCreate(true)}
+              >
+                New List
+              </button>
+            </div>
           </div>
-
           {/* Comments/Description */}
-          <label>Comments</label>
+          <label>Description</label>
           <textarea
             name="description"
             value={editedTask.description}
@@ -178,28 +214,26 @@ function TaskView({ task, onClose }) {
 
           {/* Tag Management */}
           <label>Tags</label>
-          <div className="tags-container">
+          <div className="tags-container-scroll">
             {tags.map((tag) => (
               <span
                 key={tag.id}
                 className="task-tag"
-                style={{ backgroundColor: tag.color }}
+                style={{backgroundColor: tag.color}}
               >
-                #
-                {tag.name}
-                {' '}
+                #{tag.name}{' '}
                 <button
                   type="button"
                   className="tags-delete-button"
                   onClick={() => handleRemoveTag(tag.id)}
                 >
-                  x
-                </button>
-              </span>
+                x
+              </button>
+            </span>
             ))}
           </div>
 
-          <div className="input-with-button">
+          <div className="row">
             <select
               name="tags"
               value={selectedTagId}
@@ -222,12 +256,12 @@ function TaskView({ task, onClose }) {
               className="tags-button"
               onClick={() => setShowTagManagement(true)}
             >
-              Manage Tags
+              Manage
             </button>
           </div>
 
           {/* SubtasksPane */}
-          <SubtasksPane taskId={task.id} parentFinishDate={editedTask.finishDate} />
+          <SubtasksPane taskId={task.id} parentFinishDate={editedTask.finishDate}/>
 
           {/* Submit Button */}
           <button type="submit" className="submit-button">
@@ -252,7 +286,7 @@ function TaskView({ task, onClose }) {
         {showTagCreate && (
           <div className="popup">
             <div className="popup-content">
-              <TagCreate onTagCreated={handleTagCreated} onClose={() => setShowTagCreate(false)} />
+              <TagCreate onTagCreated={handleTagCreated} onClose={() => setShowTagCreate(false)}/>
             </div>
           </div>
         )}
@@ -268,6 +302,14 @@ function TaskView({ task, onClose }) {
               />
             </div>
           </div>
+        )}
+        {/* ListCreate Popup */}
+        {showListCreate && (
+          <ListCreate
+            show={showListCreate}
+            onClose={() => setShowListCreate(false)}
+            onListCreated={handleListCreated}
+          />
         )}
       </div>
     </div>
